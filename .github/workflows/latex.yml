@@ -31,3 +31,13 @@ jobs:
       with: 
         name: conference-paper
         path: conference-paper.pdf
+    
+    - name: Create/Update Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: latest
+        name: Latest Conference Paper
+        files: conference-paper.pdf
+        body: "Automatically generated PDF from latest commit"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
