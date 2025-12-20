@@ -1,0 +1,71 @@
+% ============================================
+% IMPLEMENTATION DETAILS
+% ============================================
+% 👤 PERSON 4: Implementation & Demo Experience
+% 
+% Instructions:
+% - Technical stack (Python, libraries, GUI framework)
+% - Key modules: simulator_full.py, integrate_l1_l2.py, GUI components
+% - ML model training and deployment
+% - Reference Figure 2 (GUI screenshots)
+% - NO code dumps - explain what the code does, not how
+% - Length: 0.7-1 page
+% 
+% NOTE: You own Figure 2 - create GUI screenshots
+% ============================================
+
+\section{Implementation Details}
+
+[PERSON 4: Explain what users interact with and how it's built]
+
+\subsection{Technology Stack}
+
+ADRDS is implemented in Python 3.9+ with the following key technologies:
+\begin{itemize}
+    \item \textbf{Simulation Engine:} Custom behavioral simulator using multiprocessing 
+          for parallel event generation
+    \item \textbf{ML Framework:} scikit-learn for model training; supports Random Forest, 
+          SVM, and neural network classifiers
+    \item \textbf{GUI Framework:} [Tkinter/PyQt/Streamlit] for interactive visualization
+    \item \textbf{Data Processing:} pandas and numpy for feature engineering
+    \item \textbf{Visualization:} matplotlib/plotly for real-time charts
+\end{itemize}
+
+\subsection{Core Modules}
+
+\textbf{Behavioral Simulator (\texttt{simulator\_full.py}):} Generates configurable 
+ransomware behavioral sequences across attack stages. Users can adjust parameters 
+such as encryption speed, file targeting strategies, and C2 communication frequency.
+
+\textbf{Feature Integration (\texttt{integrate\_l1\_l2.py}):} Bridges L1 stage 
+information with L2 behavioral events, producing feature vectors suitable for ML 
+classification while maintaining interpretability.
+
+\textbf{Demo Orchestrator (\texttt{demo\_complete.py}):} Coordinates simulation, 
+detection, and visualization for seamless interactive demonstration experiences.
+
+\subsection{Machine Learning Pipeline}
+
+Models are trained on labeled datasets (see Section~\ref{sec:experiments}) using 
+5-fold cross-validation. Feature selection employs mutual information scoring to 
+identify the most discriminative behavioral indicators. Trained models are serialized 
+for real-time inference during demonstrations.
+
+\subsection{User Interface}
+
+Figure~\ref{fig:gui} shows the main interface components:
+\begin{itemize}
+    \item Control panel for simulation parameter adjustment
+    \item Real-time attack stage timeline
+    \item Detection confidence meters with threshold sliders
+    \item Alert notification panel
+    \item Performance metrics dashboard
+\end{itemize}
+
+% PERSON 4: Insert Figure 2 here
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=\columnwidth]{figures/gui_screenshot.png}
+% \caption{ADRDS interactive GUI showing real-time detection and visualization.}
+% \label{fig:gui}
+% \end{figure}

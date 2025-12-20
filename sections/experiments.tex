@@ -1,0 +1,82 @@
+% ============================================
+% EXPERIMENTAL SETUP
+% ============================================
+% 👤 PERSON 5: ML & Evaluation Lead
+% 
+% Instructions:
+% - Dataset description (size, sources, labeling)
+% - Feature engineering details
+% - ML models evaluated
+% - Evaluation metrics (accuracy, precision, recall, F1, ROC-AUC)
+% - Experimental methodology (train/test split, cross-validation)
+% - Reference Table 1 (dataset characteristics)
+% - Length: 0.6-0.8 pages
+% 
+% NOTE: You own Table 1 - create dataset summary table
+% ============================================
+
+\section{Experimental Setup}
+\label{sec:experiments}
+
+[PERSON 5: Establish credibility through rigorous experimental design]
+
+\subsection{Datasets}
+
+We evaluate ADRDS using [dataset name/combination], consisting of:
+\begin{itemize}
+    \item \textbf{Ransomware samples:} [N] samples from [families: WannaCry, 
+          Locky, Cerber, etc.]
+    \item \textbf{Benign samples:} [M] samples from normal system operations
+    \item \textbf{Total behavioral sequences:} [N+M] labeled sequences
+\end{itemize}
+
+Table~\ref{tab:dataset} summarizes dataset characteristics.
+
+% PERSON 5: Insert Table 1 here
+% \begin{table}[htbp]
+% \caption{Dataset Characteristics}
+% \label{tab:dataset}
+% \centering
+% \begin{tabular}{|l|r|}
+% \hline
+% \textbf{Characteristic} & \textbf{Value} \\
+% \hline
+% Ransomware samples & XXX \\
+% Benign samples & XXX \\
+% Ransomware families & XX \\
+% Behavioral features & XXX \\
+% Avg. sequence length & XXX events \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+\subsection{Feature Engineering}
+
+We extract [X] behavioral features from raw event sequences, including:
+\begin{itemize}
+    \item File operation statistics (read/write/delete rates, entropy changes)
+    \item Process behavior patterns (spawning frequency, injection attempts)
+    \item Registry modification counts
+    \item Network communication features (connection frequency, data volume)
+    \item Cryptographic API usage
+\end{itemize}
+
+Feature normalization applies z-score standardization. Feature selection uses 
+mutual information to retain the top [Y] most discriminative features.
+
+\subsection{Machine Learning Models}
+
+We evaluate three classifier types:
+\begin{itemize}
+    \item \textbf{Random Forest:} [X] trees, max depth [Y]
+    \item \textbf{Support Vector Machine (SVM):} RBF kernel, C=[value], gamma=[value]
+    \item \textbf{Neural Network:} [architecture details]
+\end{itemize}
+
+\subsection{Evaluation Methodology}
+
+\textbf{Training/Testing:} 80/20 split with 5-fold cross-validation on training set.
+
+\textbf{Metrics:} Accuracy, Precision, Recall, F1-score, ROC-AUC, and detection latency.
+
+\textbf{Baseline Comparison:} We compare against [existing system/signature-based detection].

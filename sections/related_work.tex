@@ -1,0 +1,47 @@
+% ============================================
+% BACKGROUND & RELATED WORK
+% ============================================
+% 👤 PERSON 2: Background & Threat Modeling
+% 
+% Instructions:
+% - Survey existing ransomware detection approaches
+% - Categorize: signature-based, behavior-based, ML-based, hybrid
+% - Position ADRDS: what's novel/different?
+% - Cite key papers (10-15 references)
+% - Length: 0.7-1 page
+% ============================================
+
+\section{Background and Related Work}
+
+[PERSON 2: Survey the landscape and show how ADRDS fills the gap]
+
+\subsection{Ransomware Detection Approaches}
+
+\textbf{Signature-Based Methods:} Traditional antivirus systems rely on known 
+malware signatures but fail against zero-day and polymorphic ransomware~\cite{ref1}.
+
+\textbf{Behavior-Based Detection:} Systems monitoring file system operations, 
+registry changes, and process behavior show promise but suffer from high false 
+positive rates~\cite{ref2}.
+
+\textbf{Machine Learning Approaches:} Recent work applies supervised learning 
+(SVM, Random Forest, neural networks) to detect ransomware from behavioral 
+features~\cite{ref3, ref4}. However, most lack interactive demonstration capabilities.
+
+\textbf{Hybrid Systems:} Combining multiple detection strategies improves accuracy 
+but increases complexity~\cite{ref5}.
+
+\subsection{Demo and Interactive Systems}
+
+Few existing systems provide interactive demonstration environments for exploring 
+ransomware behavior and detection mechanisms in real-time~\cite{ref6}.
+
+\subsection{Positioning of ADRDS}
+
+ADRDS distinguishes itself by:
+\begin{itemize}
+    \item Integrating behavioral simulation with live ML classification
+    \item Providing an interactive GUI for hands-on exploration
+    \item Supporting adjustable detection thresholds and stage-wise analysis
+    \item Enabling educational and research applications
+\end{itemize}

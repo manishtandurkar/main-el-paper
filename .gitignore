@@ -1,0 +1,97 @@
+# LaTeX Build Artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.lof
+*.lot
+*.idx
+*.ind
+*.ilg
+*.glo
+*.gls
+*.ist
+*.acn
+*.acr
+*.alg
+*.glg
+*.nav
+*.snm
+*.vrb
+*.dvi
+*.ps
+
+# LaTeX Temporary Files
+*.backup
+*~
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# Build Directory (if used)
+build/
+output/
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+
+# Python (if using scripts for processing)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Keep These Directories But Ignore Contents Initially
+# (Remove these lines once you add actual figures/tables)
+# figures/.gitkeep
+# tables/.gitkeep
+
+# PDF Output (Optional - comment out if you want to commit PDFs)
+# main.pdf
+
+# Backup Files from Editors
+*~
+\#*\#
+.\#*
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Latexmk
+*.latexmk
+
+# BibTeX
+*.bib.bak
+*.bib~
+
+# Glossaries
+*.glsdefs
+*.xdy
+
+# Notes and Drafts (Optional)
+notes/
+drafts/
+*.draft.tex
+
+main.pdf

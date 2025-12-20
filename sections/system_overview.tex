@@ -1,0 +1,57 @@
+% ============================================
+% SYSTEM OVERVIEW
+% ============================================
+% 👤 PERSON 3: System & Taxonomy Architect
+% 
+% Instructions:
+% - High-level architecture of ADRDS
+% - Describe main components: simulator, detector, visualizer
+% - Data flow between components
+% - Reference Figure 1 (architecture diagram)
+% - Length: 0.7-1 page
+% 
+% NOTE: You own Figure 1 - create architecture diagram
+% ============================================
+
+\section{System Overview}
+
+[PERSON 3: Explain the big picture - how ADRDS components work together]
+
+ADRDS consists of three primary components that work in concert to enable 
+interactive ransomware detection demonstration, as illustrated in Figure~\ref{fig:architecture}.
+
+\subsection{System Architecture}
+
+\textbf{Behavioral Simulator:} Generates realistic ransomware behavioral patterns 
+across multiple attack stages (reconnaissance, encryption, C2 communication, etc.). 
+Implemented in \texttt{simulator\_full.py}, it produces observable events mimicking 
+actual ransomware operations.
+
+\textbf{ML-Based Detector:} Consumes behavioral features from the simulator and 
+applies trained machine learning models to classify behaviors as benign or malicious. 
+The detector supports adjustable confidence thresholds for exploring trade-offs 
+between detection rate and false positives.
+
+\textbf{Interactive Visualizer:} Provides real-time visualization of attack progression, 
+detected behaviors, and classification results. Users can manipulate simulation 
+parameters, adjust detection thresholds, and observe outcomes dynamically through 
+an intuitive GUI.
+
+\subsection{Data Flow}
+
+\begin{enumerate}
+    \item Simulator generates behavioral events based on taxonomy stages
+    \item Feature extractor (\texttt{integrate\_l1\_l2.py}) processes raw events 
+          into feature vectors
+    \item ML classifier evaluates features and outputs detection scores
+    \item Visualizer renders attack timeline, detection alerts, and performance metrics
+    \item User interactions feed back to simulator for real-time scenario adjustment
+\end{enumerate}
+
+% PERSON 3: Insert Figure 1 here
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=\columnwidth]{figures/architecture.pdf}
+% \caption{ADRDS system architecture showing data flow between simulator, detector, and visualizer components.}
+% \label{fig:architecture}
+% \end{figure}

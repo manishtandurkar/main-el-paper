@@ -1,0 +1,97 @@
+% ============================================
+% RESULTS & EVALUATION
+% ============================================
+% 👤 PERSON 5: ML & Evaluation Lead
+% 
+% Instructions:
+% - Present experimental results with tables and figures
+% - Compare different ML models
+% - Show detection accuracy, precision/recall, ROC curves
+% - Report latency/performance metrics
+% - Reference Figure 4 (ROC curve) and Tables 2-3 (results)
+% - Let the numbers speak - this section builds credibility
+% - Length: 0.8-1 page
+% 
+% NOTE: You own Figure 4 and Tables 2-3
+% ============================================
+
+\section{Results and Evaluation}
+
+[PERSON 5: Show that ADRDS actually works with solid numbers]
+
+\subsection{Detection Performance}
+
+Table~\ref{tab:results} presents classification performance across evaluated models.
+
+% PERSON 5: Insert Table 2 here
+% \begin{table}[htbp]
+% \caption{Classification Performance Comparison}
+% \label{tab:results}
+% \centering
+% \begin{tabular}{|l|c|c|c|c|c|}
+% \hline
+% \textbf{Model} & \textbf{Acc} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} & \textbf{AUC} \\
+% \hline
+% Random Forest & XX\% & XX\% & XX\% & XX\% & 0.XX \\
+% SVM & XX\% & XX\% & XX\% & XX\% & 0.XX \\
+% Neural Network & XX\% & XX\% & XX\% & XX\% & 0.XX \\
+% Baseline & XX\% & XX\% & XX\% & XX\% & 0.XX \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+\textbf{Key Findings:}
+\begin{itemize}
+    \item Random Forest achieves the highest overall accuracy ([XX\%]) with balanced 
+          precision and recall
+    \item All ML approaches significantly outperform signature-based baseline
+    \item False positive rate remains below [X\%] across all models
+\end{itemize}
+
+\subsection{ROC Analysis}
+
+Figure~\ref{fig:roc} shows ROC curves for all classifiers. The Random Forest model 
+achieves AUC of [0.XX], indicating excellent discrimination capability.
+
+% PERSON 5: Insert Figure 4 here
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=\columnwidth]{figures/roc_curves.pdf}
+% \caption{ROC curves comparing ML classifiers for ransomware detection.}
+% \label{fig:roc}
+% \end{figure}
+
+\subsection{Detection Latency}
+
+Table~\ref{tab:latency} reports average detection latency from attack initiation 
+to classification decision.
+
+% PERSON 5: Insert Table 3 here
+% \begin{table}[htbp]
+% \caption{Detection Latency and Resource Usage}
+% \label{tab:latency}
+% \centering
+% \begin{tabular}{|l|c|c|}
+% \hline
+% \textbf{Model} & \textbf{Latency (ms)} & \textbf{CPU (\%)} \\
+% \hline
+% Random Forest & XXX & XX \\
+% SVM & XXX & XX \\
+% Neural Network & XXX & XX \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+All models achieve sub-second detection latency, suitable for real-time deployment. 
+Random Forest offers the best balance between accuracy and computational efficiency.
+
+\subsection{Stage-Wise Detection}
+
+Analysis of detection timing shows that:
+\begin{itemize}
+    \item [X\%] of attacks detected during reconnaissance stage
+    \item [Y\%] detected during initial encryption phase
+    \item [Z\%] detected within first [N] encrypted files
+\end{itemize}
+
+Early detection enables proactive mitigation before significant damage occurs.

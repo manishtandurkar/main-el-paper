@@ -1,0 +1,78 @@
+% ============================================
+% DISCUSSION & LIMITATIONS
+% ============================================
+% 👤 PERSON 5: ML & Evaluation Lead
+% 
+% Instructions:
+% - Interpret results: why does ADRDS work well?
+% - Discuss limitations and challenges
+% - Threats to validity
+% - Generalization to new ransomware families
+% - Deployment considerations
+% - Be honest about weaknesses - shows scientific maturity
+% - Length: 0.4-0.6 pages
+% ============================================
+
+\section{Discussion and Limitations}
+
+[PERSON 5: Provide honest, nuanced analysis of what works and what doesn't]
+
+\subsection{Key Insights}
+
+\textbf{Behavioral Features Matter:} The strong performance of ML models validates 
+our behavioral taxonomy approach. Features related to file entropy changes and 
+high-frequency file operations proved most discriminative.
+
+\textbf{Stage-Based Detection:} Early-stage detection capabilities demonstrate 
+the value of comprehensive behavioral modeling beyond just encryption-phase monitoring.
+
+\textbf{Model Trade-offs:} Random Forest's superior performance stems from its 
+ability to capture non-linear feature interactions without overfitting, unlike 
+neural networks which require larger training sets.
+
+\subsection{Limitations}
+
+\textbf{Dataset Constraints:} Our evaluation uses simulated and lab-environment 
+data. Real-world deployment may encounter behavioral variations not captured in 
+training data.
+
+\textbf{Evasion Potential:} Sophisticated attackers aware of our detection features 
+could potentially craft evasive behaviors (e.g., rate-limiting file operations). 
+Adversarial robustness requires ongoing research.
+
+\textbf{Zero-Day Detection:} While our approach generalizes better than signature-based 
+methods, novel ransomware families with radically different behaviors may evade 
+detection until retraining.
+
+\textbf{False Positives:} Legitimate applications with aggressive file operations 
+(e.g., backup software, video editing) may trigger false alerts. Production deployment 
+requires careful threshold tuning and whitelisting.
+
+\subsection{Generalization}
+
+Cross-validation across ransomware families shows [X\%] accuracy on held-out families, 
+suggesting reasonable generalization. However, ongoing model updates are necessary 
+as attack techniques evolve.
+
+\subsection{Deployment Considerations}
+
+\textbf{Computational Overhead:} Real-time feature extraction and classification 
+impose [X\%] CPU overhead, acceptable for most systems but potentially problematic 
+for resource-constrained environments.
+
+\textbf{Integration Challenges:} Production integration requires hooks into OS-level 
+event monitoring, which may vary across platforms (Windows, Linux, macOS).
+
+\subsection{Threats to Validity}
+
+\textbf{Internal Validity:} Simulation-based evaluation may not fully capture 
+real malware complexity.
+
+\textbf{External Validity:} Lab-environment testing may not reflect production 
+system workload diversity.
+
+\textbf{Construct Validity:} Selected features may not comprehensively represent 
+all ransomware behaviors.
+
+Despite limitations, ADRDS demonstrates the viability of ML-driven behavioral 
+detection and provides a valuable platform for security research and education.

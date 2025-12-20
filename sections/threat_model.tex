@@ -1,0 +1,51 @@
+% ============================================
+% THREAT MODEL & SAFETY CONSIDERATIONS
+% ============================================
+% 👤 PERSON 2: Background & Threat Modeling
+% 
+% Instructions:
+% - Define attacker capabilities and assumptions
+% - Clarify what ADRDS detects and what it doesn't
+% - Address safety: simulation vs. real malware
+% - Ethical considerations for demo track
+% - Length: 0.3-0.5 pages
+% ============================================
+
+\section{Threat Model and Safety Considerations}
+
+[PERSON 2: Define scope and boundaries clearly]
+
+\subsection{Threat Model}
+
+We consider ransomware attackers with the following capabilities:
+\begin{itemize}
+    \item Ability to execute code on victim systems
+    \item Use of encryption APIs for file encryption
+    \item Privilege escalation and persistence mechanisms
+    \item Command-and-control (C2) communication for key exchange
+\end{itemize}
+
+\textbf{Assumptions:} The system has access to monitor file system operations, 
+process behavior, and network traffic. We focus on detecting ransomware during 
+its active encryption phase and related behavioral stages.
+
+\textbf{Out of Scope:} Initial infection vectors (phishing, exploit kits) and 
+post-encryption ransom negotiation are outside the current detection scope.
+
+\subsection{Safety Considerations}
+
+\textbf{Simulation-Based Approach:} ADRDS uses behavioral simulation rather than 
+executing actual ransomware samples, ensuring safe demonstration without risk of 
+infection or data loss.
+
+\textbf{Controlled Environment:} All demo scenarios run in isolated, controlled 
+environments with no access to production systems or sensitive data.
+
+\textbf{Ethical Use:} The system is designed for educational, research, and 
+defensive security purposes only. Users are responsible for compliance with 
+applicable laws and regulations.
+
+\subsection{Privacy and Data Handling}
+
+No personally identifiable information (PII) or sensitive data is collected, 
+stored, or transmitted during system operation or demonstration.

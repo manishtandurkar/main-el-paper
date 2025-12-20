@@ -1,0 +1,65 @@
+% ============================================
+% BEHAVIORAL TAXONOMY & SIMULATION MODEL
+% ============================================
+% 👤 PERSON 3: System & Taxonomy Architect
+% 
+% Instructions:
+% - Define the behavioral taxonomy (L1/L2 categories)
+% - Explain attack stages: reconnaissance, encryption, persistence, etc.
+% - Describe simulation model implementation
+% - Reference Figure 3 (attack timeline/stage progression)
+% - Length: 0.8-1 page
+% 
+% NOTE: You own Figure 3 - create attack timeline diagram
+% ============================================
+
+\section{Behavioral Taxonomy and Simulation Model}
+
+[PERSON 3: Detail the taxonomy that drives behavioral simulation]
+
+\subsection{Ransomware Behavioral Taxonomy}
+
+We developed a two-level behavioral taxonomy to comprehensively model ransomware 
+operations:
+
+\textbf{Level 1 (L1): High-Level Attack Stages}
+\begin{itemize}
+    \item \textbf{Reconnaissance:} System profiling, file enumeration, target selection
+    \item \textbf{Privilege Escalation:} Exploitation of vulnerabilities to gain elevated access
+    \item \textbf{Persistence:} Installation of mechanisms to survive reboots
+    \item \textbf{Encryption:} File encryption operations (the primary malicious activity)
+    \item \textbf{C2 Communication:} Key exchange and ransom negotiation with attacker server
+    \item \textbf{Destruction:} Shadow copy deletion, backup removal
+\end{itemize}
+
+\textbf{Level 2 (L2): Fine-Grained Behavioral Indicators}
+\begin{itemize}
+    \item File system operations (read, write, delete, rename patterns)
+    \item Process behaviors (spawning, injection, termination)
+    \item Registry modifications (persistence keys, configuration changes)
+    \item Network activities (DNS queries, HTTP/HTTPS traffic, encryption protocols)
+    \item Cryptographic API calls (CryptEncrypt, CryptGenKey usage patterns)
+\end{itemize}
+
+\subsection{Simulation Model}
+
+The behavioral simulator (\texttt{simulator\_full.py}) implements a finite state 
+machine progressing through L1 stages while emitting L2-level observable events. 
+Each stage generates characteristic behavioral signatures that feed into the detection pipeline.
+
+Figure~\ref{fig:timeline} illustrates typical attack stage progression and associated 
+behavioral indicators.
+
+% PERSON 3: Insert Figure 3 here
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=\columnwidth]{figures/attack_timeline.pdf}
+% \caption{Ransomware attack stage progression with timeline and key behavioral indicators.}
+% \label{fig:timeline}
+% \end{figure}
+
+\subsection{Integration with Detection}
+
+The \texttt{integrate\_l1\_l2.py} module bridges L1 and L2 representations, 
+extracting features suitable for ML classification while preserving stage context 
+for interpretability.
