@@ -5,9 +5,9 @@ This is the LaTeX source for the ADRDS (Adaptive Dynamic Ransomware Detection Sy
 
 ## 🎯 Ground Rules (Non-Negotiable)
 
-1. **One main file:** `main.tex` (Person 1 owns this - DO NOT EDIT unless you're Person 1)
+1. **One main file:** `main.tex` (Manish T owns this - DO NOT EDIT unless you're Manish T)
 2. **One section per person:** Each team member owns their `.tex` files
-3. **One references file:** `references.bib` (shared, but Person 1 ensures no duplicates)
+3. **One references file:** `references.bib` (shared, but Manish T ensures no duplicates)
 4. **Figures go in:** `/figures` folder
 5. **Tables go in:** `/tables` folder
 6. **Compile locally before pushing:** Ensure your section compiles without errors
@@ -16,34 +16,34 @@ This is the LaTeX source for the ADRDS (Adaptive Dynamic Ransomware Detection Sy
 
 ```
 IEEE_Conference_Template/
-├── main.tex                    # 👤 PERSON 1 ONLY
+├── main.tex                    # 👤 Manish T
 ├── references.bib              # Shared (all team members add citations)
 ├── IEEEtran.cls               # IEEE style file (DO NOT MODIFY)
 ├── sections/
-│   ├── abstract.tex           # 👤 Person 1
-│   ├── introduction.tex       # 👤 Person 2
-│   ├── related_work.tex       # 👤 Person 2
-│   ├── threat_model.tex       # 👤 Person 2
-│   ├── system_overview.tex    # 👤 Person 3
-│   ├── taxonomy.tex           # 👤 Person 3
-│   ├── implementation.tex     # 👤 Person 4
-│   ├── demo.tex               # 👤 Person 4
-│   ├── experiments.tex        # 👤 Person 5
-│   ├── results.tex            # 👤 Person 5
-│   ├── discussion.tex         # 👤 Person 5
-│   └── conclusion.tex         # 👤 Person 1
+│   ├── abstract.tex           # 👤 Manish T
+│   ├── introduction.tex       # 👤 Manish H
+│   ├── related_work.tex       # 👤 Manish H
+│   ├── threat_model.tex       # 👤 Manish H
+│   ├── system_overview.tex    # 👤 Nikhil
+│   ├── taxonomy.tex           # 👤 Nikhil
+│   ├── implementation.tex     # 👤 Aditya
+│   ├── demo.tex               # 👤 Aditya
+│   ├── experiments.tex        # 👤 Vinay
+│   ├── results.tex            # 👤 Vinay
+│   ├── discussion.tex         # 👤 Vinay
+│   └── conclusion.tex         # 👤 Manish T
 ├── figures/
-│   ├── architecture.pdf       # 👤 Person 3
-│   ├── gui_screenshot.png     # 👤 Person 4
-│   ├── attack_timeline.pdf    # 👤 Person 3
-│   └── roc_curves.pdf         # 👤 Person 5
+│   ├── architecture.pdf       # 👤 Nikhil
+│   ├── gui_screenshot.png     # 👤 Aditya
+│   ├── attack_timeline.pdf    # 👤 Nikhil
+│   └── roc_curves.pdf         # 👤 Vinay
 └── tables/
-    └── (created as needed by Person 5)
+    └── (created as needed by Vinay)
 ```
 
 ## 👥 Team Responsibilities
 
-### 👤 Person 1: Lead / Integrator
+### 👤 Manish T: Lead / Integrator
 **Role:** Keeps narrative coherent + submission ready
 
 **Sections:**
@@ -61,7 +61,7 @@ IEEE_Conference_Template/
 
 ---
 
-### 👤 Person 2: Background & Threat Modeling
+### 👤 Manish H: Background & Threat Modeling
 **Role:** Owns "why this matters" and safety
 
 **Sections:**
@@ -81,7 +81,7 @@ IEEE_Conference_Template/
 
 ---
 
-### 👤 Person 3: System & Taxonomy Architect
+### 👤 Nikhil: System & Taxonomy Architect
 **Role:** Owns how ADRDS works conceptually
 
 **Sections:**
@@ -100,7 +100,7 @@ IEEE_Conference_Template/
 
 ---
 
-### 👤 Person 4: Implementation & Demo Experience
+### 👤 Aditya: Implementation & Demo Experience
 **Role:** Owns what users actually see
 
 **Sections:**
@@ -119,7 +119,7 @@ IEEE_Conference_Template/
 
 ---
 
-### 👤 Person 5: ML & Evaluation Lead
+### 👤 Vinay: ML & Evaluation Lead
 **Role:** Owns credibility via numbers
 
 **Sections:**
@@ -151,17 +151,17 @@ IEEE_Conference_Template/
 - **Goal:** All sections have substantive content (even if rough)
 
 ### Day 3: Integration
-- **Person 1:** Integrates all sections into `main.tex`
+- **Manish T:** Integrates all sections into `main.tex`
 - **Everyone:** Fix cross-references and flow issues
 - **Goal:** Full paper compiles successfully
 
 ### Day 4: Figures & Results
-- **Person 3, 4, 5:** Finalize all figures and tables
-- **Person 5:** Verify all experimental numbers
+- **Nikhil, 4, 5:** Finalize all figures and tables
+- **Vinay:** Verify all experimental numbers
 - **Goal:** All visuals publication-ready
 
 ### Day 5: Polish & Submission
-- **Person 1:** Final proofreading, formatting, page limit compliance (4-6 pages)
+- **Manish T:** Final proofreading, formatting, page limit compliance (4-6 pages)
 - **Everyone:** Quick review of full paper
 - **Goal:** Submit camera-ready PDF
 
@@ -194,7 +194,7 @@ Upload the entire folder and compile `main.tex`.
 1. ❌ **DO NOT** let everyone edit Introduction
 2. ❌ **DO NOT** let multiple people tweak Abstract
 3. ❌ **DO NOT** dump code listings into the paper (this is a demo paper, not a code manual)
-4. ❌ **DO NOT** edit `main.tex` unless you're Person 1
+4. ❌ **DO NOT** edit `main.tex` unless you're Manish T
 5. ❌ **DO NOT** use symbols, special characters, or math in Abstract or Title
 
 ---
@@ -203,18 +203,18 @@ Upload the entire folder and compile `main.tex`.
 
 | Section | Owner | Target Pages |
 |---------|-------|--------------|
-| Abstract | Person 1 | 0.2 |
-| Introduction | Person 2 | 0.8-1.0 |
-| Related Work | Person 2 | 0.7-1.0 |
-| Threat Model | Person 2 | 0.3-0.5 |
-| System Overview | Person 3 | 0.7-1.0 |
-| Taxonomy | Person 3 | 0.8-1.0 |
-| Implementation | Person 4 | 0.7-1.0 |
-| Demo | Person 4 | 0.5-0.7 |
-| Experiments | Person 5 | 0.6-0.8 |
-| Results | Person 5 | 0.8-1.0 |
-| Discussion | Person 5 | 0.4-0.6 |
-| Conclusion | Person 1 | 0.3-0.5 |
+| Abstract | Manish T | 0.2 |
+| Introduction | Manish H | 0.8-1.0 |
+| Related Work | Manish H | 0.7-1.0 |
+| Threat Model | Manish H | 0.3-0.5 |
+| System Overview | Nikhil | 0.7-1.0 |
+| Taxonomy | Nikhil | 0.8-1.0 |
+| Implementation | Aditya | 0.7-1.0 |
+| Demo | Aditya | 0.5-0.7 |
+| Experiments | Vinay | 0.6-0.8 |
+| Results | Vinay | 0.8-1.0 |
+| Discussion | Vinay | 0.4-0.6 |
+| Conclusion | Manish T | 0.3-0.5 |
 
 **Total:** ~4-6 pages (figures and tables included)
 
@@ -238,10 +238,10 @@ Upload the entire folder and compile `main.tex`.
 
 ## 🔗 Cross-References Between Sections
 
-- **Person 2:** Reference system architecture when discussing contributions (Person 3's work)
-- **Person 3:** Reference demo scenarios when describing visualizer (Person 4's work)
-- **Person 4:** Reference experimental results when discussing demo value (Person 5's work)
-- **Person 5:** Reference taxonomy when describing features (Person 3's work)
+- **Manish H:** Reference system architecture when discussing contributions (Nikhil's work)
+- **Nikhil:** Reference demo scenarios when describing visualizer (Aditya's work)
+- **Aditya:** Reference experimental results when discussing demo value (Vinay's work)
+- **Vinay:** Reference taxonomy when describing features (Nikhil's work)
 
 **Coordination:** Use Slack/Teams to confirm figure numbers and section references.
 
@@ -249,7 +249,7 @@ Upload the entire folder and compile `main.tex`.
 
 ## ✅ Pre-Submission Checklist
 
-### Person 1 Final Tasks:
+### Manish T Final Tasks:
 - [ ] All author names and affiliations correct
 - [ ] Abstract has no symbols, math, or footnotes
 - [ ] All sections compile without errors
@@ -270,7 +270,7 @@ Upload the entire folder and compile `main.tex`.
 ## 🆘 Need Help?
 
 - **LaTeX issues:** Check IEEE template documentation
-- **Merge conflicts:** Person 1 resolves
+- **Merge conflicts:** Manish T resolves
 - **Content questions:** Discuss in team meeting
 - **Citation format:** Use `\cite{ref1}` in text, maintain `references.bib`
 
@@ -290,7 +290,7 @@ This paper succeeds if:
 
 **Let's build an awesome demo paper! 🚀**
 
-*Questions? Contact Person 1 (Lead Integrator)*
+*Questions? Contact Manish T (Lead Integrator)*
 
 ## Continuous Integration (GitHub Actions)
 
