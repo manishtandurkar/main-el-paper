@@ -5,7 +5,7 @@ This is the LaTeX source for the ADRDS (Adaptive Dynamic Ransomware Detection Sy
 
 ## 🎯 Ground Rules (Non-Negotiable)
 
-1. **One main file:** `main.tex` (Manish T owns this - DO NOT EDIT unless you're Manish T)
+1. **One main file:** `main.tex` (Manish T)
 2. **One section per person:** Each team member owns their `.tex` files
 3. **One references file:** `references.bib` (shared, but Manish T ensures no duplicates)
 4. **Figures go in:** `/figures` folder
@@ -141,61 +141,12 @@ IEEE_Conference_Template/
 - ✅ Honest discussion of limitations
 - ✅ Defend metrics and methodology
 
----
-
-## 🧠 Timeline (5-Day Sprint)
-
-### Day 1-2: Content Creation
-- **Everyone:** Write rough drafts of your sections
-- **Focus:** Content first, polish later
-- **Goal:** All sections have substantive content (even if rough)
-
-### Day 3: Integration
-- **Manish T:** Integrates all sections into `main.tex`
-- **Everyone:** Fix cross-references and flow issues
-- **Goal:** Full paper compiles successfully
-
-### Day 4: Figures & Results
-- **Nikhil, 4, 5:** Finalize all figures and tables
-- **Vinay:** Verify all experimental numbers
-- **Goal:** All visuals publication-ready
-
-### Day 5: Polish & Submission
-- **Manish T:** Final proofreading, formatting, page limit compliance (4-6 pages)
-- **Everyone:** Quick review of full paper
-- **Goal:** Submit camera-ready PDF
 
 ---
 
 ## 🚀 How to Compile
 
-### Local Compilation
-```bash
-# Navigate to project directory
-cd IEEE_Conference_Template
-
-# Compile (run twice for references)
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex
-```
-
-### VS Code Users
 Install **LaTeX Workshop** extension, then click "Build LaTeX project" button.
-
-### Overleaf Users
-Upload the entire folder and compile `main.tex`.
-
----
-
-## ⚠️ Common Mistakes to AVOID
-
-1. ❌ **DO NOT** let everyone edit Introduction
-2. ❌ **DO NOT** let multiple people tweak Abstract
-3. ❌ **DO NOT** dump code listings into the paper (this is a demo paper, not a code manual)
-4. ❌ **DO NOT** edit `main.tex` unless you're Manish T
-5. ❌ **DO NOT** use symbols, special characters, or math in Abstract or Title
 
 ---
 
@@ -236,17 +187,6 @@ Upload the entire folder and compile `main.tex`.
 
 ---
 
-## 🔗 Cross-References Between Sections
-
-- **Manish H:** Reference system architecture when discussing contributions (Nikhil's work)
-- **Nikhil:** Reference demo scenarios when describing visualizer (Aditya's work)
-- **Aditya:** Reference experimental results when discussing demo value (Vinay's work)
-- **Vinay:** Reference taxonomy when describing features (Nikhil's work)
-
-**Coordination:** Use Slack/Teams to confirm figure numbers and section references.
-
----
-
 ## ✅ Pre-Submission Checklist
 
 ### Manish T Final Tasks:
@@ -267,30 +207,6 @@ Upload the entire folder and compile `main.tex`.
 
 ---
 
-## 🆘 Need Help?
-
-- **LaTeX issues:** Check IEEE template documentation
-- **Merge conflicts:** Manish T resolves
-- **Content questions:** Discuss in team meeting
-- **Citation format:** Use `\cite{ref1}` in text, maintain `references.bib`
-
----
-
-## 🎯 Success Criteria
-
-This paper succeeds if:
-1. ✅ The demo sounds **exciting** and **valuable**
-2. ✅ The system architecture is **clear**
-3. ✅ The experimental results are **credible**
-4. ✅ The paper tells a **coherent story**
-5. ✅ It compiles **without errors**
-6. ✅ It meets **page limits** (4-6 pages)
-
----
-
-**Let's build an awesome demo paper! 🚀**
-
-*Questions? Contact Manish T (Lead Integrator)*
 
 ## Continuous Integration (GitHub Actions)
 

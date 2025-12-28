@@ -12,19 +12,8 @@
 % ============================================
 
 \begin{abstract}
-[PERSON 1: Write abstract here - Focus on demo track appeal]
 
-Ransomware continues to pose severe threats to organizations and individuals. 
-This paper presents ADRDS (Adaptive Dynamic Ransomware Detection System), 
-an interactive demonstration platform for real-time ransomware detection and 
-behavioral analysis. The system combines behavioral modeling, machine learning 
-classification, and interactive visualization to enable security researchers 
-and practitioners to explore ransomware attack patterns. During the live demo, 
-attendees can interactively control ransomware stages, observe real-time behavioral 
-visualization, and see on-the-fly ML classification outcomes with adjustable thresholds. 
-ADRDS achieves [X\%] detection accuracy on [dataset name] while maintaining 
-low false positive rates, demonstrating practical viability for deployment 
-in real-world security operations.
+Ransomware has emerged as one of the most severe cybersecurity threats, causing large-scale data encryption, financial losses, and service disruptions. Traditional signature-based detection mechanisms struggle to identify modern ransomware due to rapid evolution, obfuscation techniques, and zero-day variants. To address these limitations, this paper presents an AI-Driven Ransomware Detection and Response Simulator (ADRDS) that focuses on behavior-based analysis rather than static signatures. The proposed system safely simulates ransomware-like activities, extracts key behavioral features such as file entropy, API-call patterns, and file I/O bursts, and applies a hybrid machine learning framework for detection. A supervised learning model trained on BigMalware and EMBER datasets identifies known ransomware patterns, while an unsupervised LSTM Autoencoder detects anomalous behaviors indicative of previously unseen attacks. The outputs of both models are fused into a unified risk score that enables early and accurate detection. Additionally, the system incorporates an automated response mechanism to simulate containment actions and a visualization dashboard for real-time monitoring. Experimental results demonstrate that the hybrid approach improves detection robustness while maintaining safety and scalability, making ADRDS a practical framework for ransomware research, training, and intelligent cyber defense.
 
 \end{abstract}
 
