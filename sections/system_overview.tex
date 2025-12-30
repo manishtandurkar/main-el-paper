@@ -15,43 +15,43 @@
 
 \section{System Overview}
 
-[PERSON 3: Explain the big picture - how ADRDS components work together]
+ADRDS is designed as a modular, interactive demonstration platform that bridges the gap between theoretical ransomware detection research and hands-on exploration. The system architecture, illustrated in Fig.~\ref{fig:architecture}, comprises three tightly integrated components that enable real-time behavioral simulation, machine learning-based detection, and interactive visualization.
 
-ADRDS consists of three primary components that work in concert to enable 
-interactive ransomware detection demonstration, as illustrated in Figure~\ref{fig:architecture}.
+\subsection{Core Components}
 
-\subsection{System Architecture}
+\subsubsection{Behavioral Simulator}
+The behavioral simulator forms the foundation of ADRDS, generating realistic ransomware attack sequences that mirror actual malware behavior observed in the wild. Implemented in \texttt{simulator\_full.py}, this component models ransomware operations across multiple attack stages including reconnaissance, privilege escalation, persistence establishment, file encryption, and command-and-control (C2) communication.
 
-\textbf{Behavioral Simulator:} Generates realistic ransomware behavioral patterns 
-across multiple attack stages (reconnaissance, encryption, C2 communication, etc.). 
-Implemented in \texttt{simulator\_full.py}, it produces observable events mimicking 
-actual ransomware operations.
+The simulator employs a configurable state machine that transitions through attack phases while emitting observable behavioral events. Users can adjust parameters such as encryption speed, file targeting strategies, and network communication patterns to explore different ransomware variants and attack scenarios. This flexibility allows security practitioners and researchers to investigate how detection systems respond to variations in attacker behavior.
 
-\textbf{ML-Based Detector:} Consumes behavioral features from the simulator and 
-applies trained machine learning models to classify behaviors as benign or malicious. 
-The detector supports adjustable confidence thresholds for exploring trade-offs 
-between detection rate and false positives.
+\subsubsection{ML-Based Detector}
+The detection engine consumes behavioral features extracted from simulator output and applies trained machine learning models to classify activities as benign or malicious. Our implementation supports multiple classification algorithms including Random Forest, Support Vector Machines (SVM), and Neural Networks, enabling comparative analysis of detection performance.
 
-\textbf{Interactive Visualizer:} Provides real-time visualization of attack progression, 
-detected behaviors, and classification results. Users can manipulate simulation 
-parameters, adjust detection thresholds, and observe outcomes dynamically through 
-an intuitive GUI.
+A key feature of the detector is its adjustable confidence threshold mechanism, which allows users to explore the trade-off between detection rate and false positive rate in real-time. This capability is particularly valuable for understanding how detection sensitivity impacts operational deployment in production environments where false alarms can overwhelm security teams.
 
-\subsection{Data Flow}
+\subsubsection{Interactive Visualizer}
+The visualization component provides an intuitive graphical interface that renders attack progression, detection alerts, and classification outcomes in real-time. Built using modern GUI frameworks, the visualizer displays temporal attack timelines, behavioral feature distributions, and model confidence scores through interactive charts and graphs.
+
+Users can manipulate simulation parameters, adjust detection thresholds, and observe the immediate impact on detection performance through the interface. This interactive capability transforms passive observation into active exploration, enabling users to develop intuition about ransomware behavior and detection mechanisms.
+
+\subsection{Data Flow and Integration}
+
+The ADRDS architecture implements a streamlined data flow pipeline:
 
 \begin{enumerate}
-    \item Simulator generates behavioral events based on taxonomy stages
-    \item Feature extractor (\texttt{integrate\_l1\_l2.py}) processes raw events 
-          into feature vectors
-    \item ML classifier evaluates features and outputs detection scores
-    \item Visualizer renders attack timeline, detection alerts, and performance metrics
-    \item User interactions feed back to simulator for real-time scenario adjustment
+    \item The behavioral simulator generates time-stamped event sequences representing ransomware operations across L1 attack stages.
+    \item The feature extraction module (\texttt{integrate\_l1\_l2.py}) processes raw events into structured feature vectors, combining L1 stage information with L2 behavioral indicators.
+    \item The ML-based detector evaluates feature vectors using trained classification models and outputs detection scores with confidence levels.
+    \item The visualizer renders detection results, attack timelines, and performance metrics through the interactive GUI.
+    \item User interactions with the GUI feed back into the simulator, enabling dynamic scenario adjustment and iterative exploration.
 \end{enumerate}
+
+This closed-loop architecture enables ADRDS to function as both a demonstration platform and an experimental testbed for ransomware detection research. The modular design ensures that individual components can be updated or replaced without affecting system-wide functionality, supporting future enhancements and extensions.
 
 % PERSON 3: Insert Figure 1 here
 % \begin{figure}[htbp]
 % \centering
 % \includegraphics[width=\columnwidth]{figures/architecture.pdf}
-% \caption{ADRDS system architecture showing data flow between simulator, detector, and visualizer components.}
+% \caption{ADRDS system architecture showing data flow between behavioral simulator, ML-based detector, and interactive visualizer components.}
 % \label{fig:architecture}
 % \end{figure}

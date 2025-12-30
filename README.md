@@ -3,6 +3,35 @@
 ## 📋 Project Overview
 This is the LaTeX source for the ADRDS (Adaptive Dynamic Ransomware Detection System) demo track paper. The project is structured for **5-person team collaboration** with clear ownership and minimal conflicts.
 
+## ✅ Setup Complete!
+
+**All dependencies are now installed:**
+- ✅ MiKTeX 24.1 (LaTeX distribution)
+- ✅ VS Code LaTeX Workshop extension
+- ✅ Project structure (figures/ and tables/ directories)
+- ✅ Successfully compiled PDF (main.pdf)
+
+## 🚀 Quick Start
+
+### Compile the Document
+**Option 1: Using LaTeX Workshop in VS Code**
+- Open `main.tex`
+- Press `Ctrl+Alt+B` to build
+- PDF preview will open automatically
+
+**Option 2: Command Line**
+```powershell
+cd "path\to\main-el-paper"
+pdflatex main.tex
+bibtex main
+pdflatex main.tex
+pdflatex main.tex
+```
+
+### View the PDF
+- The compiled PDF is at: `main.pdf`
+- Use the built-in PDF viewer in VS Code or any PDF reader
+
 ## 🎯 Ground Rules (Non-Negotiable)
 
 1. **One main file:** `main.tex` (Manish T)

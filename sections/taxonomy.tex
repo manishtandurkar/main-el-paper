@@ -15,51 +15,80 @@
 
 \section{Behavioral Taxonomy and Simulation Model}
 
-[PERSON 3: Detail the taxonomy that drives behavioral simulation]
+Understanding ransomware behavior requires a comprehensive framework that captures both high-level attack progression and fine-grained system interactions. We developed a two-level behavioral taxonomy that provides this dual perspective, enabling both human interpretation and machine learning-based detection.
 
-\subsection{Ransomware Behavioral Taxonomy}
+\subsection{Two-Level Behavioral Taxonomy}
 
-We developed a two-level behavioral taxonomy to comprehensively model ransomware 
-operations:
+Our taxonomy organizes ransomware operations into hierarchical categories that reflect the natural progression of attacks while capturing implementation-specific details.
 
-\textbf{Level 1 (L1): High-Level Attack Stages}
+\subsubsection{Level 1 (L1): High-Level Attack Stages}
+L1 categories represent major phases in the ransomware kill chain, each characterized by distinct strategic objectives:
+
 \begin{itemize}
-    \item \textbf{Reconnaissance:} System profiling, file enumeration, target selection
-    \item \textbf{Privilege Escalation:} Exploitation of vulnerabilities to gain elevated access
-    \item \textbf{Persistence:} Installation of mechanisms to survive reboots
-    \item \textbf{Encryption:} File encryption operations (the primary malicious activity)
-    \item \textbf{C2 Communication:} Key exchange and ransom negotiation with attacker server
-    \item \textbf{Destruction:} Shadow copy deletion, backup removal
+    \item \textbf{Reconnaissance:} The attacker profiles the victim system to identify valuable targets. This stage involves enumerating files and directories, identifying file types and sizes, and determining system configuration. Behavioral indicators include rapid directory traversal, file metadata access without content reading, and system information queries.
+    
+    \item \textbf{Privilege Escalation:} Many ransomware variants attempt to elevate privileges to maximize impact. This stage may involve exploiting vulnerabilities, token manipulation, or process injection. Observable behaviors include attempts to access privileged resources, creation of child processes with elevated rights, and modification of security policies.
+    
+    \item \textbf{Persistence Establishment:} To survive system reboots and maintain control, ransomware often installs persistence mechanisms. Common techniques include registry key modification, scheduled task creation, and service installation. These operations leave distinctive traces in registry logs and system configuration changes.
+    
+    \item \textbf{Encryption:} The core malicious activity involves encrypting victim files using cryptographic algorithms. This stage exhibits characteristic patterns including high-frequency file access, replacement of original files with encrypted versions, and extensive use of cryptographic APIs. File entropy changes provide a strong signal for detection.
+    
+    \item \textbf{Command-and-Control (C2) Communication:} Modern ransomware typically communicates with attacker-controlled servers for key exchange, configuration updates, and ransom negotiation. This stage generates network traffic patterns, DNS queries to suspicious domains, and HTTPS connections to known or unknown endpoints.
+    
+    \item \textbf{Destruction:} To prevent recovery, sophisticated ransomware deletes backup files, shadow copies, and system restore points. This destructive behavior manifests as Volume Shadow Copy Service (VSS) interactions, backup file deletion, and system recovery tool termination.
 \end{itemize}
 
-\textbf{Level 2 (L2): Fine-Grained Behavioral Indicators}
+\subsubsection{Level 2 (L2): Fine-Grained Behavioral Indicators}
+L2 categories capture specific system interactions observable through monitoring APIs and system logs:
+
 \begin{itemize}
-    \item File system operations (read, write, delete, rename patterns)
-    \item Process behaviors (spawning, injection, termination)
-    \item Registry modifications (persistence keys, configuration changes)
-    \item Network activities (DNS queries, HTTP/HTTPS traffic, encryption protocols)
-    \item Cryptographic API calls (CryptEncrypt, CryptGenKey usage patterns)
+    \item \textbf{File System Operations:} Read, write, delete, rename, and move operations with associated frequency statistics, file type distributions, and access patterns. Rapid sequential file modifications across multiple directories indicate encryption activity.
+    
+    \item \textbf{Process Behaviors:} Process creation and termination events, parent-child relationships, code injection attempts, and memory manipulation. Unusual process spawning patterns often signal malicious activity.
+    
+    \item \textbf{Registry Modifications:} Registry key creation, modification, and deletion events, particularly in persistence-related hives such as HKEY\_LOCAL\_MACHINE$\backslash$SOFTWARE$\backslash$Microsoft$\backslash$Windows$\backslash$CurrentVersion$\backslash$Run.
+    
+    \item \textbf{Network Activities:} DNS resolution requests, TCP/UDP connection establishment, HTTP/HTTPS traffic characteristics, and data transfer volumes. Unusual outbound connections to rare or suspicious domains warrant investigation.
+    
+    \item \textbf{Cryptographic API Calls:} Invocations of Windows Cryptographic API functions such as CryptEncrypt, CryptGenKey, and CryptCreateHash. High-frequency usage of these APIs correlates strongly with encryption operations.
 \end{itemize}
 
-\subsection{Simulation Model}
+\subsection{Simulation Model Implementation}
 
-The behavioral simulator (\texttt{simulator\_full.py}) implements a finite state 
-machine progressing through L1 stages while emitting L2-level observable events. 
-Each stage generates characteristic behavioral signatures that feed into the detection pipeline.
+The behavioral simulator implements a finite state machine that transitions through L1 stages while generating L2-level observable events. Each state transition triggers the emission of behavioral indicators consistent with that attack stage, creating realistic attack sequences for detection system evaluation.
 
-Figure~\ref{fig:timeline} illustrates typical attack stage progression and associated 
-behavioral indicators.
+The simulator incorporates configurable parameters that control attack characteristics:
+
+\begin{itemize}
+    \item \textbf{Encryption Speed:} Controls the rate of file encryption operations, simulating both aggressive ransomware variants that encrypt quickly and stealthier versions that operate slowly to evade detection.
+    
+    \item \textbf{File Targeting Strategy:} Determines which files and directories are targeted, supporting scenarios ranging from broad encryption of all accessible files to selective targeting of high-value data.
+    
+    \item \textbf{C2 Communication Frequency:} Adjusts the frequency and timing of network communications, enabling exploration of detection approaches for both chatty and silent ransomware variants.
+    
+    \item \textbf{Stage Timing:} Controls dwell time in each attack stage, allowing investigation of detection latency and early-stage detection capabilities.
+\end{itemize}
+
+Fig.~\ref{fig:timeline} illustrates a typical ransomware attack progression through our taxonomy stages, showing the temporal relationship between L1 phases and the intensity of L2 behavioral indicators.
 
 % PERSON 3: Insert Figure 3 here
 % \begin{figure}[htbp]
 % \centering
 % \includegraphics[width=\columnwidth]{figures/attack_timeline.pdf}
-% \caption{Ransomware attack stage progression with timeline and key behavioral indicators.}
+% \caption{Ransomware attack stage progression showing temporal evolution of L1 phases and associated L2 behavioral indicator intensity. The encryption stage exhibits peak activity in file operations and cryptographic API usage.}
 % \label{fig:timeline}
 % \end{figure}
 
-\subsection{Integration with Detection}
+\subsection{Feature Integration for ML Detection}
 
-The \texttt{integrate\_l1\_l2.py} module bridges L1 and L2 representations, 
-extracting features suitable for ML classification while preserving stage context 
-for interpretability.
+The \texttt{integrate\_l1\_l2.py} module serves as the bridge between taxonomy-driven simulation and machine learning-based detection. This component extracts discriminative features from raw event streams while preserving stage context for interpretability.
+
+Feature extraction operates in two modes:
+
+\begin{itemize}
+    \item \textbf{Statistical Aggregation:} Computes summary statistics over behavioral indicators within sliding time windows, including event frequencies, rate of change, and distributional characteristics. These features capture temporal patterns indicative of ransomware activity.
+    
+    \item \textbf{Sequential Pattern Encoding:} Preserves temporal ordering of L1 stage transitions and L2 event sequences, enabling detection of characteristic attack progressions that distinguish ransomware from benign software.
+\end{itemize}
+
+By maintaining explicit connections between high-level attack stages and low-level system events, our taxonomy supports both interpretable rule-based detection and powerful machine learning approaches, providing flexibility for different operational contexts and detection requirements.
