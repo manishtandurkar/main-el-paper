@@ -36,12 +36,13 @@ jobs:
         name: conference-paper
         path: conference-paper.pdf
     
-    - name: Create/Update Release
+    - name: Create release for this run
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: latest
-        name: Latest Conference Paper
+        # create a unique tag per run so the Releases page shows a new entry
+        tag_name: build-${{ github.run_number }}
+        name: "Conference Paper - run #${{ github.run_number }}"
         files: conference-paper.pdf
-        body: "Automatically generated PDF from latest commit"
+        body: "Automatically generated PDF from run ${{ github.run_number }} (commit: ${{ github.sha }})"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
