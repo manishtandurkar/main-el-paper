@@ -1,60 +1,43 @@
 % ============================================
-% BACKGROUND & RELATED WORK
-% ============================================
-% 👤 PERSON 2: Background & Threat Modeling
-% 
-% Instructions:
-% - Survey existing ransomware detection approaches
-% - Categorize: signature-based, behavior-based, ML-based, hybrid
-% - Position ADRDS: what's novel/different?
-% - Cite key papers (10-15 references)
-% - Length: 0.7-1 page
+% BACKGROUND AND RELATED WORK
 % ============================================
 
 \section{Background and Related Work}
 
-[PERSON 2: Survey the landscape and show how ADRDS fills the gap]
+Ransomware detection has been an active area of research over the past decade, driven by the rapid evolution of attack strategies and the increasing economic and operational impact of ransomware incidents. Existing solutions can broadly be categorized into signature-based, behavior-based, machine learning-based, and hybrid detection approaches. This section reviews these categories and highlights the limitations that motivate the design of ADRDS.
 
 \subsection{Ransomware Detection Approaches}
 
-	extbf{Signature-Based Methods:} Traditional antivirus systems rely on known malware signatures but fail against zero-day and polymorphic ransomware~\cite{ref1}. For example, Kharraz et al. (2023) highlight the limitations of static signatures in detecting new ransomware strains.
+\textbf{Signature-Based Methods:}
+Traditional antivirus and endpoint protection systems primarily rely on static signatures and known indicators of compromise to identify ransomware. While effective against previously observed malware, these approaches fail to detect zero-day and polymorphic ransomware variants that frequently alter their code structure to evade signature matching. Prior studies emphasize that static signatures are increasingly inadequate in modern threat landscapes, particularly against rapidly evolving ransomware families.
 
-	extbf{Behavior-Based Detection:} Systems monitoring file system operations, registry changes, and process behavior show promise but suffer from high false positive rates~\cite{ref2}. Continella et al. (2023) and Scaife et al. (2022) propose dynamic analysis frameworks, yet note challenges in distinguishing ransomware from benign high-activity applications.
+\textbf{Behavior-Based Detection:}
+Behavior-based systems monitor runtime characteristics such as file system activity, registry modifications, process behavior, and system call patterns to identify malicious behavior. Approaches such as dynamic file system monitoring and encryption-rate analysis have shown promise in detecting ransomware early. Notable works by Continella et al. and Scaife et al. demonstrate the effectiveness of monitoring abnormal file access and encryption behavior. However, these systems often suffer from high false positive rates, as benign applications such as backup tools or compression utilities can exhibit similar high-activity patterns, making precise discrimination challenging.
 
-	extbf{Machine Learning Approaches:} Recent work applies supervised learning (SVM, Random Forest, neural networks) to detect ransomware from behavioral features~\cite{ref3, ref4}. Sgandurra et al. (2023) and Vinayakumar et al. (2024) demonstrate improved detection accuracy using deep learning, but most systems are not designed for real-time or interactive use.
+\textbf{Machine Learning-Based Approaches:}
+Recent research has increasingly adopted machine learning techniques to improve ransomware detection accuracy. Supervised models such as Support Vector Machines, Random Forests, and gradient-boosted trees leverage extracted behavioral features to classify malicious activity. More recent deep learning approaches, including recurrent neural networks and autoencoders, have been explored to capture temporal dependencies and anomalous behavior patterns. Studies by Sgandurra et al. and Vinayakumar et al. report improved detection performance using deep learning; however, many of these systems operate offline, lack real-time responsiveness, or provide limited interpretability for security analysts.
 
-	extbf{Hybrid Systems:} Combining multiple detection strategies improves accuracy but increases complexity~\cite{ref5}. Kolosnjaji et al. (2023) and Pascanu et al. (2024) explore hybrid models that fuse static and dynamic features, achieving robust results but with increased resource demands.
+\textbf{Hybrid Detection Systems:}
+Hybrid systems combine multiple detection strategies, such as static analysis with dynamic behavior monitoring or supervised learning with anomaly detection, to improve robustness against diverse ransomware variants. Works by Kolosnjaji et al. and Pascanu et al. demonstrate that hybrid models can achieve higher detection accuracy and better generalization. Nevertheless, such systems often introduce increased computational complexity and are rarely designed for interactive analysis or educational use, limiting their practical accessibility.
 
-\subsection{Demo and Interactive Systems}
+\subsection{Interactive and Demonstration-Oriented Systems}
 
-Few existing systems provide interactive demonstration environments for exploring ransomware behavior and detection mechanisms in real-time~\cite{ref6}. Notable exceptions include the CyberSecLab platform (Lee et al., 2023) and the Ransomware Interactive Sandbox (RIS, 2024), which offer limited hands-on capabilities but lack the comprehensive behavioral taxonomy and ML integration of ADRDS.
+Despite advances in detection accuracy, relatively few platforms focus on interactive or demonstration-oriented ransomware analysis. Existing systems largely operate as automated security tools with minimal user interaction. A small number of educational platforms, such as CyberSecLab and other interactive sandbox environments, allow users to explore cybersecurity concepts through controlled experiments. However, these platforms typically lack comprehensive ransomware-specific behavioral taxonomies, real-time machine learning integration, or transparent visualization of detection decisions.
 
 \subsection{Positioning of ADRDS}
 
-ADRDS distinguishes itself by:
-\begin{itemize}
-	\item Integrating behavioral simulation with live ML classification
-	\item Providing an interactive GUI for hands-on exploration
-	\item Supporting adjustable detection thresholds and stage-wise analysis
-	\item Enabling educational and research applications
-	\item Covering gaps left by prior works, including real-time feedback, transparency, and user-driven scenario control
-\end{itemize}
+The \textit{AI-Driven Ransomware Detection and Response Simulator (ADRDS)} is designed to address the limitations identified in prior work. Unlike traditional detection systems, ADRDS emphasizes transparency, interactivity, and behavior-driven analysis. The framework integrates safe ransomware behavior simulation with a hybrid machine learning detection engine and a real-time visualization dashboard. By allowing users to actively trigger ransomware-like behaviors and observe the system’s response, ADRDS supports both practical security experimentation and educational use cases. Its modular design enables adjustable detection thresholds, stage-wise risk analysis, and explainable telemetry, positioning ADRDS as a complementary platform to existing automated ransomware defense solutions.
 
-\textbf{Key Papers Surveyed:}
+\subsection{Summary of Prior Work}
+
+The following representative studies inform the design of ADRDS:
 \begin{itemize}
-	\item Kharraz et al., "Cutting the Gordian Knot: A Look Under the Hood of Ransomware Attacks," IEEE S\&P, 2023
-	\item Continella et al., "ShieldFS: A Self-Healing, Ransomware-Aware Filesystem," ACM CCS, 2023
-	\item Scaife et al., "Cryptolock (and Drop It): Stopping Ransomware Attacks on User Data," IEEE S\&P, 2022
-	\item Sgandurra et al., "Automated Dynamic Analysis of Ransomware: Techniques and Trends," USENIX Security, 2023
-	\item Vinayakumar et al., "Deep Learning Approaches for Ransomware Detection," Computers \& Security, 2024
-	\item Kolosnjaji et al., "Hybrid Analysis for Ransomware Detection," IEEE Transactions on Information Forensics and Security, 2023
-	\item Pascanu et al., "Malware Classification with Recurrent Neural Networks," NDSS, 2024
-	\item Lee et al., "CyberSecLab: An Interactive Security Education Platform," IEEE Demo Track, 2023
-	\item RIS: Ransomware Interactive Sandbox, 2024
-	\item [ref1] Signature-Based Ransomware Detection: Challenges and Limitations, IEEE Security Conference, 2023
-	\item [ref2] Behavioral Analysis for Ransomware Detection: A Survey, IEEE TIFS, 2023
-	\item [ref3] Machine Learning Approaches to Ransomware Classification, ACM CCS, 2022
-	\item [ref4] Deep Learning for Malware Detection: A Comprehensive Review, ACM Computing Surveys, 2023
-	\item [ref5] Hybrid Detection Systems for Advanced Persistent Threats, USENIX Security, 2023
-	\item [ref6] Interactive Security Demonstration Platforms: Design and Evaluation, IEEE Demo Track, 2022
+    \item Kharraz et al., ``Cutting the Gordian Knot: A Look Under the Hood of Ransomware Attacks,'' IEEE S\&P.
+    \item Continella et al., ``ShieldFS: A Self-Healing, Ransomware-Aware Filesystem,'' ACM CCS.
+    \item Scaife et al., ``Cryptolock (and Drop It): Stopping Ransomware Attacks on User Data,'' IEEE S\&P.
+    \item Sgandurra et al., ``Automated Dynamic Analysis of Ransomware,'' USENIX Security.
+    \item Vinayakumar et al., ``Deep Learning Approaches for Ransomware Detection,'' Computers \& Security.
+    \item Kolosnjaji et al., ``Hybrid Analysis for Ransomware Detection,'' IEEE TIFS.
+    \item Pascanu et al., ``Malware Classification with Recurrent Neural Networks,'' NDSS.
+    \item Lee et al., ``CyberSecLab: An Interactive Security Education Platform,'' IEEE Demo Track.
 \end{itemize}
