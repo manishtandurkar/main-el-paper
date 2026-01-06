@@ -1,78 +1,41 @@
 % ============================================
-% DEMO SCENARIOS & WALKTHROUGH
-% ============================================
-% 👤 PERSON 4: Implementation & Demo Experience
-% 
-% Instructions:
-% - Describe 2-3 concrete demo scenarios attendees will experience
-% - Walk through typical interaction flow
-% - Explain what makes the demo compelling/educational
-% - Reference demo_complete.py functionality
-% - THIS IS CRITICAL FOR DEMO TRACK - make it vivid
-% - Length: 0.5-0.7 pages
+% DEMO SCENARIO AND WALKTHROUGH
 % ============================================
 
-\section{Demo Scenarios and Walkthrough}
+\section{Demo Scenario and Walkthrough}
 
-[PERSON 4: Paint a picture of what attendees will see and do]
+ADRDS is designed as an interactive demonstration platform that allows users to observe, analyze, and understand ransomware detection in real time. The demo scenario showcases the end-to-end operation of the system, from behavior simulation to detection and response, emphasizing transparency and user-driven exploration.
 
-\subsection{Interactive Demo Experience}
+\subsection{Demo Setup}
 
-During the live demonstration, attendees engage with ADRDS through hands-on 
-exploration of ransomware detection scenarios. The \texttt{demo\_complete.py} 
-script orchestrates the following interactive experiences:
+The demonstration is conducted within a controlled and sandboxed environment to ensure safety and reproducibility. At the start of the demo, the system is initialized in a benign state, where normal application behavior is simulated and monitored by the ADRDS pipeline. All detection thresholds are set to conservative default values to reflect a realistic deployment baseline.
 
-\subsection{Scenario 1: Threshold Exploration}
+The visualization dashboard presents the initial system state, including baseline behavioral metrics, zero or low risk scores, and inactive alert indicators.
 
-Attendees adjust ML classification thresholds in real-time to observe the trade-off 
-between detection rate and false positive rate. As ransomware behaviors progress 
-through stages, users see:
-\begin{itemize}
-    \item Detection confidence scores updating dynamically
-    \item Visual alerts triggering when thresholds are exceeded
-    \item Impact on system performance metrics
-\end{itemize}
+\subsection{Scenario Execution}
 
-\textbf{Learning Outcome:} Understanding the practical implications of threshold 
-tuning in production security systems.
+The demo proceeds through a sequence of progressively malicious scenarios that align with the behavioral taxonomy described earlier.
 
-\subsection{Scenario 2: Attack Stage Progression}
+\textbf{Stage 1: Benign Baseline Behavior.}  
+The simulator generates normal workload activity such as routine file access and process execution. The detection engine classifies this activity as benign, and the dashboard displays stable behavioral metrics with low risk scores.
 
-Users control the pace and characteristics of simulated ransomware attacks:
-\begin{itemize}
-    \item Select target file types and encryption patterns
-    \item Enable/disable C2 communication
-    \item Trigger persistence mechanisms
-\end{itemize}
+\textbf{Stage 2: Pre-Encryption Ransomware Activity.}  
+Ransomware-like behaviors are introduced, including rapid file enumeration and increased process activity. Although no destructive actions occur at this stage, the anomaly detection component begins to register deviations from baseline behavior, resulting in a gradual increase in the system risk score.
 
-The system visualizes behavioral indicators at each stage, showing which features 
-contribute most to detection decisions.
+\textbf{Stage 3: Active Encryption Simulation.}  
+The simulator escalates to high-intensity behaviors characteristic of ransomware encryption, such as burst file writes and sharp entropy variations. The supervised classifier and anomaly detector jointly flag the activity as malicious, causing the fused risk score to exceed the alert threshold.
 
-\textbf{Learning Outcome:} Recognizing stage-specific behavioral signatures and 
-understanding multi-stage detection strategies.
+\subsection{Detection and Response Visualization}
 
-\subsection{Scenario 3: Model Comparison}
+As malicious behavior intensifies, the visualization layer updates in real time to reflect attack progression and detection outcomes. Attack stages are highlighted on a temporal timeline, while risk scores and confidence values are dynamically updated.
 
-Attendees compare performance of different ML classifiers (Random Forest, SVM, 
-Neural Network) on the same behavioral sequence:
-\begin{itemize}
-    \item Side-by-side detection timelines
-    \item Comparative accuracy and latency metrics
-    \item Feature importance rankings per model
-\end{itemize}
+Once the detection threshold is crossed, ADRDS triggers simulated containment actions, such as process isolation and alert generation. These actions are visualized immediately, allowing observers to correlate behavioral changes with detection decisions and response outcomes.
 
-\textbf{Learning Outcome:} Evaluating ML model trade-offs for real-world deployment.
+\subsection{Interactive Exploration}
 
-\subsection{Demo Flow}
+A key feature of the demo is its interactive nature. Users can adjust simulation parameters, modify detection thresholds, and replay scenarios to explore how changes in attacker behavior or sensitivity settings impact detection performance. This capability enables hands-on experimentation and fosters intuitive understanding of ransomware behavior, detection trade-offs, and system responsiveness.
 
-A typical 10-minute demo session follows this structure:
-\begin{enumerate}
-    \item Brief system overview (2 min)
-    \item Scenario 1 walkthrough with attendee participation (3 min)
-    \item Scenario 2 exploration (3 min)
-    \item Q\&A and custom scenario testing (2 min)
-\end{enumerate}
+\subsection{Demonstration Value}
 
-\textbf{Interactivity:} Attendees can propose custom attack scenarios, adjust 
-any simulation parameter, and observe immediate detection outcomes, making each 
-demo session unique and engaging.
+The demo walkthrough illustrates ADRDS’s ability to provide early-stage ransomware detection, transparent decision-making, and real-time feedback within a safe environment. By combining behavioral simulation, hybrid machine learning, and interactive visualization, ADRDS serves as both an educational tool and an experimental platform for evaluating ransomware detection strategies.
+

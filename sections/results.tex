@@ -1,89 +1,38 @@
 % ============================================
-% RESULTS & EVALUATION
-% ============================================
-% 👤 PERSON 5: ML & Evaluation Lead
+% RESULTS AND EVALUATION
 % ============================================
 
 \section{Results and Evaluation}
-\label{sec:results}
 
-In this section, we present the empirical evidence supporting the efficacy of ADRDS. We analyze the detection accuracy across different classifiers, evaluate the trade-off between sensitivity and specificity using ROC curves, and assess the system's operational suitability through latency measurements.
+This section presents the results obtained from the experimental evaluation of ADRDS and analyzes the effectiveness of the proposed hybrid detection framework. The evaluation focuses on detection accuracy, early-stage identification capability, robustness against novel attack behaviors, and system responsiveness under interactive conditions.
 
-\subsection{Detection Performance}
+\subsection{Supervised Detection Results}
 
-Table~\ref{tab:results} presents the comparative performance metrics for the evaluated models. We included a signature-based baseline (ClamAV) to highlight the gap between static and dynamic detection methods.
+The supervised machine learning models demonstrate strong performance in distinguishing ransomware-like behavior from benign activity. Models trained on benchmark-derived datasets achieve high classification accuracy, with consistent precision and recall across multiple simulated attack scenarios. Tree-based models, such as Random Forests and gradient-boosted classifiers, perform particularly well on structured behavioral features, indicating their suitability for ransomware detection tasks.
 
-% TABLE 2: CLASSIFICATION RESULTS
-\begin{table}[htbp]
-\caption{Classification Performance Comparison}
-\label{tab:results}
-\centering
-\begin{tabular}{|l|c|c|c|c|c|}
-\hline
-\textbf{Model} & \textbf{Acc} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} & \textbf{AUC} \\
-\hline
-\textbf{Random Forest} & \textbf{98.5\%} & \textbf{98.2\%} & \textbf{98.8\%} & \textbf{98.5\%} & \textbf{0.99} \\
-SVM & 92.4\% & 91.0\% & 93.1\% & 92.0\% & 0.94 \\
-Neural Network & 95.8\% & 94.5\% & 96.2\% & 95.3\% & 0.97 \\
-Baseline (Sig.) & 45.0\% & 100\% & 45.0\% & 62.0\% & 0.50 \\
-\hline
-\end{tabular}
-\end{table}
+These results confirm that supervised learning is effective for identifying known ransomware patterns when representative training data is available. However, performance degrades when encountering behaviors that deviate significantly from training distributions, highlighting the limitations of purely supervised approaches.
 
-\textbf{Key Findings:}
-\begin{itemize}
-    \item \textbf{Superiority of Random Forest:} The Random Forest classifier achieves the highest overall accuracy of 98.5\% with a balanced profile between Precision and Recall. Its ensemble nature effectively reduces variance, making it highly robust against the noisy system logs typical of the training environment.
-    
-    \item \textbf{Failure of Static Baselines:} As expected, the signature-based baseline performed poorly (45\% accuracy) against our dataset of polymorphic variants. While it had perfect precision (no false positives), it completely failed to detect new, unseen ransomware strains, validating the necessity of our behavioral approach.
-    
-    \item \textbf{Low False Positive Rate:} Across all ML models, the False Positive Rate (FPR) remained below 2.0\%. This is a critical metric for production deployment, ensuring that security analysts are not overwhelmed by alert fatigue from benign high-load applications.
-\end{itemize}
+\subsection{Anomaly Detection Performance}
 
-\subsection{ROC Analysis}
+The unsupervised LSTM-based autoencoder exhibits strong sensitivity to anomalous behavioral sequences associated with ransomware activity. Reconstruction error increases sharply during pre-encryption and encryption stages, enabling early detection of malicious behavior before sustained damage occurs.
 
-Figure~\ref{fig:roc} illustrates the Receiver Operating Characteristic (ROC) curves. The Random Forest model achieves an Area Under the Curve (AUC) of 0.99, indicating near-perfect discrimination capability.
+When evaluated against benign workloads, the anomaly detector maintains a low false positive rate, indicating that normal system activity is well captured by the learned representation. These findings demonstrate the effectiveness of anomaly-based detection for identifying previously unseen or evolving ransomware behaviors.
 
-% FIGURE 4: ROC CURVES
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\columnwidth]{figures/roc_curves.pdf}
-\caption{ROC curves comparing ML classifiers. The Random Forest model (solid line) exhibits the steepest ascent, indicating a superior True Positive Rate at low False Positive thresholds compared to SVM and Neural Networks.}
-\label{fig:roc}
-\end{figure}
+\subsection{Hybrid Risk Fusion Analysis}
 
-The steep ascent of the Random Forest curve confirms that ADRDS can maintain a high detection rate even when the decision threshold is tuned to be strictly conservative regarding false alarms.
+Combining supervised classification outputs with anomaly detection scores through risk fusion significantly improves overall detection robustness. The hybrid approach reduces false positives compared to anomaly detection alone while preserving sensitivity to novel attacks that may evade supervised models.
 
-\subsection{Detection Latency}
+Evaluation across multiple attack intensities shows that the fused risk score consistently exceeds detection thresholds earlier than individual model outputs. This early-stage detection capability is particularly valuable for ransomware mitigation, as it enables response actions to be triggered before large-scale encryption activity occurs.
 
-For a real-time defense system, speed is as critical as accuracy. Table~\ref{tab:latency} reports the average latency measured from the first malicious API call to the final classification decision.
+\subsection{Latency and System Responsiveness}
 
-% TABLE 3: LATENCY AND RESOURCES
-\begin{table}[htbp]
-\caption{Detection Latency and Resource Usage}
-\label{tab:latency}
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Model} & \textbf{Latency (ms)} & \textbf{CPU Usage (\%)} \\
-\hline
-\textbf{Random Forest} & \textbf{45 ms} & \textbf{3.5\%} \\
-SVM & 120 ms & 5.2\% \\
-Neural Network & 85 ms & 8.0\% \\
-\hline
-\end{tabular}
-\end{table}
+ADRDS maintains near real-time performance across all evaluated scenarios. End-to-end latency, measured from behavioral event generation to visualization update, remains within sub-second bounds. This responsiveness ensures that detection feedback is presented promptly during interactive demonstrations and supports real-time exploratory analysis.
 
-All models achieve sub-second detection latency, rendering them suitable for the interactive demo. Random Forest offers the best efficiency, consuming only 3.5\% CPU, making it the ideal candidate for background monitoring on user workstations.
+The low latency observed confirms that the system architecture and lightweight feature processing pipeline are suitable for interactive and educational use cases, as well as for experimental ransomware detection research.
 
-\subsection{Stage-Wise Detection}
+\subsection{Evaluation Summary}
 
-By correlating detection timestamps with our L1 Behavioral Taxonomy, we analyzed \textit{when} the system catches the attack:
-\begin{itemize}
-    \item \textbf{65\% detected during Reconnaissance:} The majority of attacks were flagged during the initial file traversal and directory enumeration phase, preventing encryption entirely.
-    
-    \item \textbf{25\% detected at Encryption Start:} These attacks were caught immediately upon the first burst of \texttt{CryptEncrypt} calls, resulting in zero or negligible data loss.
-    
-    \item \textbf{10\% detected within first 5 files:} The remaining "stealthy" variants were detected after encrypting fewer than 5 files, as the entropy statistics rapidly converged to the malicious threshold.
-\end{itemize}
+Overall, the evaluation demonstrates that ADRDS effectively balances detection accuracy, robustness, and responsiveness. Supervised models provide reliable identification of known ransomware behaviors, while unsupervised anomaly detection enhances resilience against novel attack patterns. The hybrid fusion mechanism further strengthens early detection capabilities and reduces false alarms.
 
-This distribution proves that ADRDS successfully shifts the security posture from reactive recovery to proactive mitigation.
+These results validate ADRDS as a practical and safe platform for ransomware detection experimentation, interactive demonstrations, and educational exploration, while also highlighting its potential applicability to real-world defensive security research.
+

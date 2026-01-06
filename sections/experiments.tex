@@ -1,77 +1,36 @@
 % ============================================
-% EXPERIMENTAL SETUP
-% ============================================
-% 👤 PERSON 5: ML & Evaluation Lead
+% EXPERIMENTAL EVALUATION
 % ============================================
 
-\section{Experimental Setup}
-\label{sec:experiments}
+\section{Experimental Evaluation}
 
-To ensure the scientific validity of our findings, we established a rigorous experimental framework. This section details the dataset composition, feature engineering process, and the specific hyperparameters used for model training.
+This section presents the experimental evaluation of ADRDS, focusing on the effectiveness of the detection pipeline, the responsiveness of the system, and its suitability for interactive demonstration and exploratory analysis. The experiments are designed to validate both detection accuracy and real-time performance under controlled and reproducible conditions.
 
-\subsection{Datasets}
+\subsection{Experimental Setup}
 
-We evaluate ADRDS using a hybrid dataset constructed from both simulated behaviors and real-world malware traces, consisting of:
-\begin{itemize}
-    \item \textbf{Ransomware samples:} We utilized 500 verified ransomware executables sourced from the VirusShare repository, covering five distinct families including WannaCry, LockBit, and Ryuk to ensure the model learns diverse encryption behaviors across different strains.
-    
-    \item \textbf{Benign samples:} To represent normal activity, we collected 500 benign samples comprising standard Windows system files, office productivity software, and web browsers, ensuring the model learns to distinguish malicious encryption from legitimate high-load system usage.
-    
-    \item \textbf{Total behavioral sequences:} The final dataset comprises 1,000 fully labeled behavioral sequences, balanced evenly between malicious and benign classes to prevent class imbalance bias during the supervised learning phase of our model training.
-\end{itemize}
+All experiments are conducted within a sandboxed environment using synthetic and benchmark-derived behavioral data. Ransomware-like behaviors are generated using the behavioral simulation engine described earlier, while benign activity is simulated to represent normal system workloads. The detection engine processes streaming behavioral features in real time, and all results are visualized through the interactive dashboard.
 
-Table~\ref{tab:dataset} summarizes the statistical characteristics of the dataset used for validation.
+Supervised learning models are trained using labeled samples derived from the BigMalware dataset and selected subsets of the EMBER dataset. Unsupervised anomaly detection models are trained exclusively on benign behavior traces to establish a baseline representation of normal system activity. The trained models are then evaluated against simulated ransomware scenarios that vary in intensity and behavioral characteristics.
 
-% TABLE 1: DATASET CHARACTERISTICS
-\begin{table}[htbp]
-\caption{Dataset Characteristics}
-\label{tab:dataset}
-\centering
-\begin{tabular}{|l|r|}
-\hline
-\textbf{Characteristic} & \textbf{Value} \\
-\hline
-Ransomware samples & 500 \\
-Benign samples & 500 \\
-Distinct Families & 5 (WannaCry, LockBit, Ryuk, etc.) \\
-Total Features Extracted & 42 \\
-Avg. Sequence Length & 1,250 events \\
-\hline
-\end{tabular}
-\end{table}
+\subsection{Evaluation Metrics}
 
-\subsection{Feature Engineering}
+Detection performance is assessed using standard classification metrics, including accuracy, precision, recall, and F$_1$-score for supervised models. For anomaly detection, reconstruction error distributions and threshold-based true positive and false positive rates are analyzed. In addition to detection accuracy, system responsiveness is evaluated by measuring end-to-end processing latency, defined as the time between behavioral event generation and detection output visualization.
 
-We extract 42 distinct behavioral features from the raw API logs and system event sequences, focusing on:
-\begin{itemize}
-    \item \textbf{File operation statistics:} We calculate rates of read, write, and delete operations within sliding windows, specifically monitoring for Shannon entropy spikes which indicate the rapid transformation of structured data into encrypted pseudo-random ciphertext.
-    
-    \item \textbf{Process behavior patterns:} We track the frequency of child process spawning and attempts to inject code into remote threads, as these are strong indicators of privilege escalation and persistence mechanisms used by modern malware.
-    
-    \item \textbf{Registry modification counts:} We quantify changes to sensitive registry hives, particularly the "Run" keys and service configurations, which ransomware commonly modifies to ensure it survives system reboots and maintains control over the victim machine.
-    
-    \item \textbf{Network communication features:} We analyze the frequency of outbound connection attempts and total data volume transferred, identifying potential Command-and-Control (C2) beacons used for exchanging encryption keys or receiving instructions from attacker servers.
-    
-    \item \textbf{Cryptographic API usage:} We monitor the invocation rate of specific Windows Cryptographic APIs, such as \texttt{CryptEncrypt} and \texttt{CryptGenKey}, serving as a high-fidelity signal for the start of the encryption phase.
-\end{itemize}
+\subsection{Detection Performance}
 
-Feature normalization applies z-score standardization to scale all inputs to a mean of zero. Feature selection uses mutual information scoring to retain the top 20 most discriminative features for efficiency.
+Experimental results demonstrate that the supervised classification models achieve high accuracy in identifying known ransomware behavior patterns, while the unsupervised anomaly detection component effectively flags deviations associated with previously unseen attack scenarios. The hybrid risk fusion mechanism improves overall robustness by reducing false positives and enabling earlier detection during pre-encryption stages.
 
-\subsection{Machine Learning Models}
+Across multiple simulated attack variants, ADRDS consistently detects malicious behavior before the onset of sustained encryption activity. This early detection capability highlights the advantage of combining stage-aware behavioral features with hybrid machine learning models.
 
-We evaluate three distinct classifier types to determine the optimal balance between accuracy and speed:
-\begin{itemize}
-    \item \textbf{Random Forest:} We configured an ensemble of 100 decision trees with a maximum depth of 20, optimized to capture non-linear feature interactions while preventing the model from overfitting to specific training noise.
-    
-    \item \textbf{Support Vector Machine (SVM):} We utilized a Radial Basis Function (RBF) kernel with a regularization parameter $C=1.0$ and gamma set to 'scale', allowing the model to find complex decision boundaries in high-dimensional feature space.
-    
-    \item \textbf{Neural Network:} We implemented a Multi-Layer Perceptron (MLP) with two hidden layers of 64 and 32 neurons respectively, using ReLU activation functions to capture deep latent patterns in the sequential behavioral data.
-\end{itemize}
+\subsection{Real-Time Responsiveness}
 
-\subsection{Evaluation Methodology}
+ADRDS maintains near real-time performance throughout all experimental scenarios. The end-to-end detection pipeline operates with sub-second latency, ensuring that detection outcomes and visualization updates occur promptly as behavioral events unfold. This responsiveness is critical for interactive demonstration and supports practical exploration of detection thresholds and behavioral variations.
 
-\textbf{Training/Testing:} We employed an 80/20 stratified split, reserving 20\% of data for final testing. During training, we used 5-fold cross-validation to ensure our accuracy metrics are robust and not artifacts of data selection.
+\subsection{Ablation and Sensitivity Analysis}
 
-\textbf{Metrics:} We assess performance using Accuracy, Precision, Recall, F1-score, and ROC-AUC. We also measure detection latency in milliseconds to ensure the system is fast enough for the real-time interactive demo requirement.
+To assess the contribution of individual system components, ablation experiments are performed by selectively disabling elements of the detection pipeline. Results indicate that removing the anomaly detection component increases false negatives for novel attack scenarios, while disabling risk fusion leads to higher false positive rates. Sensitivity analysis of detection thresholds further illustrates the trade-off between detection sensitivity and alert stability.
 
-\textbf{Baseline Comparison:} We compare our behavioral approach against a standard signature-based detection baseline (ClamAV), demonstrating the superior ability of ADRDS to detect obfuscated ransomware variants that easily bypass static file scanning methods.
+\subsection{Discussion}
+
+The experimental evaluation confirms that ADRDS effectively balances detection accuracy, interpretability, and real-time performance. While the experiments focus on simulated ransomware behavior, the use of benchmark datasets for model training and structured behavioral taxonomy enhances the generalizability of the findings. These results demonstrate that ADRDS is well-suited for both educational demonstrations and exploratory ransomware detection research.
+
