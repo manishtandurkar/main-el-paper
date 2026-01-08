@@ -1,29 +1,19 @@
-% ============================================
-% 1. INTRODUCTION
-% ============================================
-
 \section{Introduction}
 
-Ransomware has emerged as one of the most severe threats to modern digital infrastructure, affecting enterprises, public services, and critical systems worldwide. Contemporary ransomware attacks have evolved beyond simple file encryption to more sophisticated strategies such as double extortion, where sensitive data is exfiltrated prior to encryption to amplify leverage over victims. This rapid evolution, combined with the increasing use of polymorphism and obfuscation, has rendered traditional signature-based antivirus solutions and static heuristics largely ineffective. Consequently, there is a growing need for adaptive, behavior-based detection mechanisms that can identify malicious activity at early stages and operate effectively against previously unseen ransomware variants.
+Ransomware has rapidly evolved into one of the most disruptive threats in digital security. Hospitals, educational institutions, critical infrastructure, and businesses have experienced significant operational paralysis due to encryption-based extortion. The threat landscape has shifted significantly; many strains now exfiltrate sensitive data prior to encryption, leveraging double extortion tactics \cite{moussaileb2021survey}. Furthermore, ransomware developers continuously modify code to evade traditional signature-based antivirus solutions \cite{kharraz2016unveil}. Consequently, static defenses often fail to protect against these dynamic and polymorphic threats.
 
-\subsection{Motivation and Challenges}
+\subsection{Challenges in Ransomware Defense}
 
-A key challenge in ransomware defense is the \emph{detection lag}, defined as the time interval between the onset of malicious execution and the activation of a defensive response. During this window, ransomware can encrypt a significant portion of the file system, causing irreversible damage. Industry reports, such as the Verizon Data Breach Investigations Report \cite{verizon2025}, indicate that while detection accuracy has improved over time, real-time observability and rapid intervention remain critical bottlenecks in effective incident response.
+A critical challenge in ransomware defense is the \emph{detection lag}—the interval between the execution of malicious code and the response of a security mechanism. During this window, ransomware can compromise thousands of files, often causing irreversible damage despite backup strategies. Reports like the Verizon Data Breach Investigations Report \cite{verizon2025} indicate that while detection rates have improved, the velocity and precision of response mechanisms require further optimization.
 
-In addition, many existing machine learning (ML)-based ransomware detection systems function as opaque black-box models. Although these systems may achieve high classification accuracy, they often fail to provide interpretable explanations regarding which behavioral indicators such as abnormal API call sequences, high entropy file writes, or system recovery manipulation triggered an alert. This lack of transparency limits their practical usability for security analysts, educators, and system administrators, who require both accurate detection and actionable insights into attack behavior.
+Another significant limitation is the "black box" nature of many machine learning-based detection tools. While accurate, these systems often lack interpretability. Security analysts require granular insights—such as the identification of unusual API calls, encrypted file write spikes, or tampering with recovery options—to validate alerts. Without such context, reliance on automated systems remains precarious in high-stakes environments.
 
 \subsection{The ADRDS Framework}
 
-To address these limitations, this paper presents the \textbf{AI-Driven Ransomware Detection and Response Simulator (ADRDS)}, an interactive and behavior-focused framework designed to bridge the gap between theoretical ML detection methods and practical security operations. ADRDS integrates a multi-stage behavioral modeling approach with a streaming feature extraction pipeline and a real-time visualization interface.
+To address these limitations, this paper introduces \textbf{ADRDS}—the AI-Driven Ransomware Detection and Response Simulator. ADRDS is an interactive, behavior-centric platform designed to bridge the gap between theoretical machine learning research and practical security operations. In contrast to signature-based approaches, this system analyzes software execution behavior, including file interactions, process generation, and system modifications.
 
-The framework operates within a sandboxed environment where ransomware-like behaviors can be safely simulated and observed. By enabling controlled execution of specific attack patterns, ADRDS allows users to examine how the detection engine incrementally evaluates risk, classifies attack stages, and generates interpretable telemetry. This interactive capability facilitates both practical experimentation and enhanced understanding of the ransomware lifecycle.
+The system operates within a secure, sandboxed environment. Users can initiate simulated ransomware activities to observe the real-time scoring of risks, the identification of attack stages, and the generation of telemetry. This feedback loop concretizes abstract detection concepts, rendering ADRDS applicable for both advanced research and educational purposes.
 
 \subsection{Contributions}
 
-The primary contributions of this work are summarized as follows:
-\begin{itemize}
-    \item \textbf{Behavioral Taxonomy:} A structured mapping between observable host-level events and distinct stages of the ransomware attack lifecycle.
-    \item \textbf{ADRDS Architecture:} An end-to-end framework that combines ransomware behavior simulation, hybrid machine learning-based detection, and real-time visualization.
-    \item \textbf{Experimental Evaluation:} A performance assessment of the detection engine demonstrating high classification accuracy with low-latency processing suitable for early-stage intervention.
-    \item \textbf{Reproducible Platform:} A modular and extensible simulator intended to support hands-on cybersecurity education and reproducible ransomware research.
-\end{itemize}
+This work makes several key contributions to the field. First, we define a behavioral taxonomy that maps observable host-level events—such as file access bursts and process anomalies—to specific stages of the ransomware attack lifecycle. Second, we present the ADRDS architecture, a comprehensive system integrating behavioral simulation, hybrid machine learning detection, and real-time visualization. Third, we provide experimental validation of detection accuracy and response latency, demonstrating that the proposed approach detects threats early without degrading system performance. Finally, we establish a reproducible research platform, offering a modular and extensible simulator suitable for adaptation by educators and researchers.

@@ -1,32 +1,29 @@
-% ============================================
-% DISCUSSION
-% ============================================
-
 \section{Discussion}
 
-The experimental results demonstrate that ADRDS effectively integrates behavioral modeling, hybrid machine learning, and interactive visualization to provide early and interpretable ransomware detection. This section discusses the implications of these results, key design trade-offs, and the limitations of the current system.
+Following the examination of the architecture, experiments, and results, this section reflects on the efficacy of the proposed approach, acknowledges limitations, and outlines future research directions.
 
-\subsection{Effectiveness of Behavioral Modeling}
+\subsection{Significance of Behavior-Based Detection}
 
-The results highlight the importance of behavior-based analysis for ransomware detection. By structuring detection around a stage-aware behavioral taxonomy, ADRDS is able to identify malicious activity during early phases such as file enumeration and pre-encryption preparation. This capability is particularly valuable, as it enables detection before irreversible damage occurs. The findings reinforce prior observations that behavioral indicators such as burst file access patterns and entropy variation are more reliable than static signatures in modern ransomware scenarios.
+The results substantiate the premise that behavioral monitoring offers superior efficacy compared to static analysis. By organizing detection around a stage-aware behavioral taxonomy, ADRDS identifies ransomware during early reconnaissance and file enumeration phases, potentially prior to the initiation of encryption. This proactive detection capability is critical for mitigating data loss.
 
-\subsection{Benefits of Hybrid Detection}
+\subsection{Efficacy of Hybrid Models}
 
-The evaluation confirms that combining supervised classification with unsupervised anomaly detection yields more robust performance than either approach alone. Supervised models provide strong accuracy for known ransomware behaviors, while the anomaly detection component improves resilience against novel or evolving attack patterns. The hybrid risk fusion mechanism reduces false positives and enables earlier detection, demonstrating the complementary strengths of the two learning paradigms.
+The combination of supervised classifiers with an unsupervised anomaly detector demonstrated clear advantages. Supervised learning effectively identifies known attack patterns, while the autoencoder detects novel variants. Risk fusion integrates these strengths, reducing false positives without compromising sensitivity. This robustness exceeds that of either approach in isolation.
 
-\subsection{Interpretability and User Interaction}
+\subsection{Transparency and Interactivity}
 
-A key contribution of ADRDS lies in its emphasis on transparency and interactivity. By mapping detection outcomes to behavioral stages and visualizing risk progression in real time, the system allows users to understand not only \emph{that} an alert was generated, but also \emph{why} it was triggered. This interpretability is critical for educational settings and supports analyst trust in automated detection systems. The interactive feedback loop further enables exploration of detection thresholds and attacker behavior variations, providing practical insight into detection trade-offs.
+Feedback from demonstrations highlights the value of interpretability. Correlation of detection outputs with specific lifecycle stages and real-time risk scoring transforms ADRDS from an opaque system into an educational tool. Security analysts can trace alerts to behavioral origins, while students can experimentally verify the impact of threshold adjustments.
 
-\subsection{Performance and Practicality}
+\subsection{Operational Feasibility}
 
-The observed sub-second end-to-end latency demonstrates that ADRDS is suitable for real-time monitoring and interactive demonstrations. The lightweight feature extraction pipeline and modular architecture contribute to this responsiveness, making the system practical for exploratory analysis and classroom use. While ADRDS is not intended as a production-grade endpoint protection solution, its performance characteristics indicate potential for adaptation to real-world defensive research environments.
+Sub-second end-to-end latency ensures that ADRDS remains practical for interactive applications. Whether utilized in academic exercises or for exploring edge-case scenarios, the system provides immediate feedback, facilitating natural and efficient exploration.
 
 \subsection{Limitations}
 
-Despite its strengths, ADRDS has several limitations. First, the evaluation relies primarily on simulated ransomware behavior, which may not capture all nuances of real-world malware execution. Second, the system assumes visibility into host-level telemetry, which may not always be available in constrained environments. Finally, while the hybrid detection framework improves robustness, threshold selection remains a non-trivial challenge and may require tuning for different deployment contexts.
+It is necessary to acknowledge current limitations. First, experiments utilized simulated behavior, which may not capture the full complexity of real-world malware. Second, the system relies on host-level telemetry, which may not be available in all environments. Third, threshold tuning remains context-dependent, requiring adjustment for specific deployment scenarios.
 
-\subsection{Implications for Future Research}
+\subsection{Future Work}
 
-The discussion suggests several directions for future work. Incorporating additional telemetry sources such as system call traces and network traffic could enhance detection fidelity. Exploring more advanced deep learning architectures, including transformer-based or graph-based models, may further improve detection of complex behavioral relationships. Additionally, integrating explainable AI techniques could provide deeper insight into model decisions and strengthen user trust in automated ransomware defense systems.
+Several extensions are proposed for future development. The incorporation of system call traces and network traffic analysis could enhance detection fidelity. Experimentation with transformer-based or graph-based models may enable the capture of more complex behavioral relationships. Furthermore, integrating explainable AI (XAI) techniques would further improve transparency and user trust.
 
+In conclusion, ADRDS serves as a foundational platform. The modular design and open exploration philosophy are intended to encourage further research, advancing ransomware detection while maintaining a focus on safety and interpretability.

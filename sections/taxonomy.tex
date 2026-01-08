@@ -4,40 +4,29 @@
 
 \section{Behavioral Taxonomy}
 
-Effective ransomware detection requires a structured understanding of how malicious behavior manifests over time at the host level. Rather than relying on static signatures, ADRDS adopts a behavior-centric taxonomy that decomposes ransomware activity into distinct, observable stages. This taxonomy serves as the foundation for feature extraction, detection logic, and interpretability within the ADRDS framework.
+Catching ransomware early requires understanding how it behaves over time. Rather than hunting for static signatures, we structure detection around a taxonomy of observable behaviors that unfold across distinct attack stages. This section lays out that taxonomy and explains how it feeds into feature extraction and detection logic.
 
-\subsection{Ransomware Lifecycle Stages}
+\subsection{Stages of a Ransomware Attack}
 
-ADRDS models ransomware behavior as a sequence of stages that reflect common attack workflows observed across modern ransomware families. Each stage is characterized by a set of observable host-level behaviors that can be monitored in real time.
+We model ransomware as a sequence of stages, each defined by the host-level events it produces. Recognizing these stages helps ADRDS detect partial attacks and estimate how far an intrusion has progressed.
 
-\subsubsection{Stage 1: Reconnaissance and Environment Preparation}
-In the initial stage, ransomware performs lightweight reconnaissance to assess the execution environment. Observable behaviors include directory enumeration, system information queries, and checks for virtualization or debugging artifacts. While these actions are often subtle, they establish a baseline for subsequent malicious activity.
+\subsubsection{Stage 1: Reconnaissance and Setup}
+In the opening moments, ransomware probes its environment. It might enumerate directories, query system information, or check for virtual machine artifacts that could indicate a sandbox. These actions are subtle, but they set the stage for what comes next.
 
 \subsubsection{Stage 2: Privilege Escalation and Persistence}
-Following reconnaissance, ransomware may attempt to elevate privileges or establish persistence mechanisms. This stage is characterized by behaviors such as abnormal process spawning, modification of startup configurations, and interactions with system-level resources. These actions increase the potential impact of later stages by expanding access and execution longevity.
+Once reconnaissance wraps up, attackers often try to strengthen their grip. We see abnormal process spawning, modifications to startup entries, and interactions with system-level resources. These moves expand access and help the malware survive reboots.
 
-\subsubsection{Stage 3: File Enumeration and Target Selection}
-Before encryption, ransomware typically performs extensive file system traversal to identify target files and directories. This stage exhibits high-volume read operations, rapid directory walking, and selective filtering based on file extensions or directory paths. Such access patterns often deviate significantly from benign application behavior.
+\subsubsection{Stage 3: File Enumeration and Targeting}
+Before encrypting anything, ransomware identifies its targets. This stage features high-volume read operations, rapid directory traversal, and selective filtering based on file extensions or folder paths. The burst of file activity stands out sharply against typical user workloads.
 
-\subsubsection{Stage 4: Encryption and Destructive Activity}
-The encryption stage represents the most destructive phase of a ransomware attack. It is characterized by intensive file write operations, rapid file renaming, and sharp increases in file entropy due to cryptographic transformations. These behaviors occur at a scale and speed that distinguish ransomware from most legitimate applications.
+\subsubsection{Stage 4: Encryption and Destruction}
+Here the damage happens. Intensive file writes, sudden renames, and sharp entropy spikes mark the encryption phase. Files transform from readable documents into scrambled blobs at a pace that no ordinary application would match.
 
-\subsubsection{Stage 5: Communication and Post-Encryption Actions}
-In some cases, ransomware performs outbound communication to exchange encryption keys, report execution status, or receive additional instructions. Observable indicators include anomalous network connections, unusual protocol usage, and communication patterns that coincide temporally with encryption activity.
+\subsubsection{Stage 5: Communication and Wrap-Up}
+Some ransomware phones home after encryption—exchanging keys, reporting success, or awaiting further instructions. We watch for anomalous network connections and communication patterns that coincide with the encryption window.
 
-\subsection{Behavioral Feature Mapping}
+Each stage translates into measurable indicators that ADRDS extracts and monitors. These include file system metrics such as access frequency, modification rate, and entropy changes; process-level attributes like CPU load, spawning patterns, and API call rates; temporal patterns such as burstiness and sustained high-activity windows; and stage context indicating which phase the current activity aligns with. By correlating low-level telemetry with high-level attack stages, the system can identify suspicious behavior and attribute it to a specific lifecycle phase.
 
-Each lifecycle stage is mapped to a set of behavioral indicators that are extracted and quantified by ADRDS. These indicators include, but are not limited to:
-\begin{itemize}
-    \item File system metrics such as access frequency, modification rate, and entropy variation
-    \item Process-level attributes including CPU utilization, process spawning patterns, and API invocation rates
-    \item Temporal characteristics such as burstiness and sustained high-activity intervals
-    \item Contextual stage information derived from lifecycle progression
-\end{itemize}
+\subsection{Why This Taxonomy Matters}
 
-By associating low-level telemetry with higher-level attack stages, ADRDS enables both accurate detection and meaningful interpretation of alerts.
-
-\subsection{Role of the Taxonomy in ADRDS}
-
-The behavioral taxonomy plays a central role in the ADRDS architecture. It guides feature extraction, informs the machine learning detection engine, and provides semantic context for visualization and user interaction. Unlike monolithic detection approaches, this structured taxonomy allows ADRDS to reason about partial attack progression, enabling early-stage detection and stage-aware risk assessment. Additionally, the taxonomy enhances explainability by linking detection outcomes to specific behavioral stages, improving transparency for analysts and educators.
-
+The behavioral taxonomy is not just academic scaffolding—it shapes everything ADRDS does. It guides how we extract features, what the ML models learn, and how the visualization layer presents results. Because detection is stage-aware, ADRDS can catch ransomware during early reconnaissance or file enumeration, often before any real damage occurs. Equally important, linking alerts to specific stages makes outputs interpretable, giving analysts and students concrete context instead of opaque scores.

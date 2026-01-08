@@ -1,39 +1,28 @@
-% ============================================
-% THREAT MODEL AND SAFETY CONSIDERATIONS
-% ============================================
-
 \section{Threat Model and Safety Considerations}
 
-This section defines the adversarial assumptions, detection boundaries, and safety principles that govern the design and evaluation of ADRDS. The goal is to clearly articulate what threat behaviors the system is intended to detect, as well as the ethical and operational constraints under which it operates.
+This section outlines the assumptions regarding the adversary, the scope of targeted threats, and the safety protocols implemented to ensure secure experimentation.
 
-\subsection{Threat Model}
+\subsection{Adversarial Assumptions}
 
-ADRDS considers ransomware adversaries with the following capabilities:
-\begin{itemize}
-    \item Execution of malicious code on a victim host after initial compromise
-    \item Use of standard cryptographic libraries and system APIs for file encryption
-    \item High-volume file access, modification, and renaming operations
-    \item Process-level behaviors associated with persistence and privilege escalation
-    \item Optional command-and-control (C2) communication for key exchange or status reporting
-\end{itemize}
+We focus on ransomware that has successfully established a presence on a host system. Specifically, the adversary is assumed to possess the capability to execute malicious code following an initial compromise, invoke standard system APIs and cryptographic libraries for file encryption, and perform high-volume file operations such as reads, writes, and renames with anomalous frequency. Additionally, the attacker may spawn new processes, attempt privilege escalation, establish persistence mechanisms, and optionally communicate with a command-and-control server for key exchange or status reporting.
 
-\textbf{Assumptions:}  
-The defender is assumed to have visibility into host-level telemetry, including file system activity, process behavior, API call patterns, and resource utilization. ADRDS focuses on detecting ransomware during its pre-encryption and active encryption phases, where behavioral deviations from benign workloads are most pronounced.
+\textbf{Defender Visibility.}
+From a defensive perspective, it is assumed that the monitoring system maintains visibility over host-level telemetry, including file system events, process activity, API calls, and resource utilization. ADRDS specifically targets the pre-encryption and active encryption phases, as these periods exhibit behavioral divergence from standard operational workloads.
 
-\textbf{Out-of-Scope Threats:}  
-Initial infection vectors such as phishing emails, exploit kits, and supply-chain attacks are outside the scope of this work. Additionally, post-encryption ransom negotiation, payment infrastructure, and attacker monetization strategies are not considered.
+\textbf{Scope Limitations.}
+Certain vectors are explicitly excluded from the scope of this study. Initial infection vectors, such as phishing campaigns, exploit kits, or supply-chain compromises, are outside the detection model. Furthermore, post-encryption activities, including ransom negotiation, payment infrastructure, and monetization strategies, are not addressed.
 
-\subsection{Safety Considerations}
+\subsection{Safety Protocols}
 
-\textbf{Simulation-Only Execution:}  
-ADRDS does not execute real ransomware binaries. Instead, it relies on parameterized behavioral simulation that reproduces key ransomware characteristics (e.g., entropy spikes, rapid file writes) without performing actual encryption or destructive actions. This design ensures that demonstrations and experiments are inherently safe.
+\textbf{Simulation-Based Validation.}
+ADRDS avoids the execution of live ransomware binaries. Instead, it utilizes parameterized behavioral simulations to replicate indicators of compromise—such as entropy spikes, rapid file writes, and anomalous process activity—without executing actual encryption or destructive payloads. This design ensures that demonstrations and experiments remain inherently safe.
 
-\textbf{Controlled Environment:}  
-All experiments and demonstrations are conducted within isolated, sandboxed environments with no connectivity to production systems or sensitive assets. This prevents accidental data exposure and eliminates the risk of unintended propagation.
+\textbf{Environment Isolation.}
+All experiments are conducted within sandboxed, air-gapped environments, devoid of connectivity to production systems or sensitive networks. This isolation mitigates the risk of accidental data exposure and prevents the lateral movement of simulated threats.
 
-\textbf{Ethical Use and Disclosure:}  
-The system is explicitly designed for defensive security research, education, and demonstration purposes. ADRDS does not provide exploit code or actionable guidance for attackers, and all simulated behaviors are abstracted to prevent misuse. Users are expected to adhere to applicable laws, institutional policies, and ethical guidelines.
+\textbf{Ethical Considerations.}
+ADRDS is developed strictly for defensive research, education, and demonstration purposes. The system does not contain exploit code or instructional material susceptible to weaponization. Users are expected to adhere to applicable legal frameworks, institutional policies, and ethical guidelines when utilizing the platform.
 
 \subsection{Privacy and Data Handling}
 
-ADRDS does not collect, store, or transmit personally identifiable information (PII). All telemetry used for detection and visualization is either synthetically generated or derived from non-sensitive experimental data, ensuring compliance with privacy-preserving research practices.
+The system does not collect, store, or transmit personally identifiable information (PII). All telemetry utilized for detection and visualization is either synthetically generated or derived from non-sensitive experimental datasets, ensuring alignment with privacy-preserving research standards.

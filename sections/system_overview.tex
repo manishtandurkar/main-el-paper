@@ -1,46 +1,58 @@
-% ============================================
-% SYSTEM OVERVIEW
-% ============================================
-
 \section{System Overview}
 
-The AI-Driven Ransomware Detection and Response Simulator (ADRDS) is designed as a modular and interactive platform that bridges theoretical ransomware detection research with hands-on experimentation. As illustrated in Fig.~\ref{fig:architecture}, the system architecture consists of three tightly integrated components: a behavioral simulation module, a machine learning--based detection engine, and an interactive visualization layer. Together, these components enable real-time ransomware behavior simulation, continuous detection, and transparent system feedback.
+ADRDS is designed as a modular, interactive system bridging abstract detection research with empirical experimentation. As illustrated in Fig.~\ref{fig:architecture}, the architecture comprises three integrated components: a behavioral simulator, a machine learning detection engine, and an interactive visualization layer. These components facilitate the simulation of ransomware activity, real-time detection monitoring, and the exploration of parameter sensitivity.
 
-\subsection{Core Components}
+\subsection{System Architecture}
 
 \subsubsection{Behavioral Simulator}
-The behavioral simulator forms the foundation of ADRDS by generating realistic ransomware-like attack sequences that reflect behaviors commonly observed in real-world ransomware campaigns. This module models multiple stages of the ransomware lifecycle, including reconnaissance, privilege escalation, persistence establishment, file encryption, and optional command-and-control (C2) communication.
+The behavioral simulator functions as the core of ADRDS, generating realistic ransomware behavior sequences without the execution of live malware. It implements a configurable state machine modeling the attack lifecycle—including reconnaissance, privilege escalation, persistence, encryption, and optional command-and-control communication. Each event corresponds to observable host-level activity, such as file operations, process creation, and resource utilization spikes. Parameters including encryption rate, file targeting strategy, and execution intensity are adjustable, allowing for the emulation of diverse ransomware families and tactics.
 
-The simulator is implemented as a configurable state machine that transitions between attack phases while emitting time-stamped behavioral events. These events capture observable host-level activity such as file system operations, process execution patterns, and resource utilization. Users can dynamically adjust parameters such as encryption rate, file selection strategy, and execution intensity, enabling exploration of diverse ransomware variants and attacker strategies in a safe and controlled environment.
-
-\subsubsection{Machine Learning--Based Detector}
-The detection engine ingests structured behavioral features derived from simulator output and applies trained machine learning models to classify activity as benign or malicious. The framework supports multiple supervised classification algorithms, including Random Forests, Support Vector Machines (SVM), and neural network--based models, allowing comparative evaluation of detection performance under varying conditions.
-
-A central design feature of the detector is its adjustable confidence threshold mechanism, which enables real-time exploration of the trade-off between detection sensitivity and false positive rates. Detection outputs are produced as continuous risk scores and confidence values, supporting early-stage identification of ransomware activity.
+\subsubsection{Machine Learning Detector}
+The detection engine processes structured features extracted from simulator output, applying trained machine learning models to classify activity as benign or malicious. The system supports multiple classifiers, including Random Forests \cite{breiman2001random}, Support Vector Machines \cite{takeuchi2018detecting}, and neural networks, enabling performance comparison under varying conditions. A critical feature is the adjustable confidence threshold, which allows users to modulate detection sensitivity and analyze the trade-off between false positive rates and detection capabilities.
 
 \subsubsection{Interactive Visualization Layer}
-The visualization layer provides a real-time graphical interface that exposes system behavior, detection outcomes, and model confidence metrics in an interpretable manner. This component renders temporal attack timelines, behavioral feature distributions, and classification results through interactive plots and dashboards.
+The visualization layer transforms raw telemetry into interpretable insights. It renders attack timelines, feature histograms, and risk indicators in real time. The dashboard interface permits the modification of simulation settings and detection thresholds, reflecting the immediate impact of these adjustments without requiring experiment restarts.
 
-Through the interface, users can modify simulation parameters, tune detection thresholds, and immediately observe the impact on system behavior and detection performance. This tight feedback loop transforms ADRDS from a passive monitoring system into an exploratory platform that facilitates intuitive understanding of ransomware behavior and detection dynamics.
+\subsection{Data Flow}
 
-\subsection{Data Flow and Integration}
+ADRDS operates via a closed-loop pipeline ensuring synchronization between simulation, detection, and visualization. The process initiates with the behavioral simulator generating timestamped event streams corresponding to each attack stage. Subsequently, a feature extraction module converts these raw events into structured feature vectors, aggregating stage context with behavioral metrics. The machine learning detector then evaluates these vectors, producing classification outputs and confidence scores. Finally, the visualization layer renders the results, attack progress, and performance metrics in real time. User interactions—such as parameter adjustments and threshold modifications—are fed back into the simulator, closing the control loop.
 
-ADRDS implements a closed-loop data flow pipeline that tightly integrates simulation, detection, and visualization:
-
-\begin{enumerate}
-    \item The behavioral simulator generates time-stamped event streams representing ransomware activity across distinct attack stages.
-    \item A feature extraction module processes raw events into structured feature vectors by combining stage-level context with behavioral indicators.
-    \item The machine learning--based detector evaluates these feature vectors using trained models and produces classification outputs with associated confidence scores.
-    \item The visualization layer renders detection results, attack progression, and performance metrics in real time.
-    \item User interactions through the visualization interface feed back into the simulator, enabling dynamic scenario adjustment and iterative experimentation.
-\end{enumerate}
-
-This closed-loop architecture allows ADRDS to function both as a demonstration system and as an experimental testbed for ransomware detection research. The modular design ensures that individual components can be independently extended or replaced without impacting overall system functionality, supporting future enhancements and research extensions.
+This architecture establishes ADRDS as a dual-purpose platform, suitable for both demonstration and research. The modular design ensures that individual components can be replaced or extended, such as incorporating new models or feature extractors, without disrupting the overall pipeline.
 
 % Figure placement
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics[width=\columnwidth]{figures/architecture.pdf}
-% \caption{ADRDS system architecture illustrating data flow between the behavioral simulator, machine learning--based detector, and interactive visualization components.}
-% \label{fig:architecture}
-% \end{figure}
+\begin{figure}[t]
+\centering
+\scalebox{0.75}{
+\begin{tikzpicture}[
+    node distance=0.6cm and 1cm,
+    box/.style={rectangle, draw, fill=blue!10, text width=2.5cm, align=center, minimum height=0.7cm, font=\footnotesize},
+    arrow/.style={-{Stealth[length=1.5mm]}, thick},
+    feedback/.style={-{Stealth[length=1.5mm]}, thick, dashed, red}
+]
+
+% Nodes
+\node[box] (simulator) {Behavioral Simulator};
+\node[box, below=of simulator] (events) {Event Generation};
+\node[box, below=of events] (features) {Feature Extraction};
+\node[box, below=of features] (supervised) {Supervised Classifier};
+\node[box, right=of supervised] (unsupervised) {Unsupervised Autoencoder};
+\node[box, below=of supervised, xshift=1.25cm] (fusion) {Risk Fusion};
+\node[box, below=of fusion] (viz) {Visualization \& Alerts};
+\node[box, left=of viz, xshift=-0.4cm] (user) {User Interaction};
+
+% Arrows
+\draw[arrow] (simulator) -- (events);
+\draw[arrow] (events) -- (features);
+\draw[arrow] (features) -- (supervised);
+\draw[arrow] (features) -| (unsupervised);
+\draw[arrow] (supervised) -- (fusion);
+\draw[arrow] (unsupervised) -- (fusion);
+\draw[arrow] (fusion) -- (viz);
+\draw[arrow] (viz) -- (user);
+\draw[feedback] (user) |- ([yshift=0.25cm]simulator.north) -- (simulator);
+
+\end{tikzpicture}
+}
+\caption{ADRDS system architecture illustrating data flow between the behavioral simulator, machine learning-based detector, and interactive visualization components. The dashed line represents the feedback loop.}
+\label{fig:architecture}
+\end{figure}

@@ -1,41 +1,32 @@
-% ============================================
-% DEMO SCENARIO AND WALKTHROUGH
-% ============================================
+\section{Demonstration Scenario and Walkthrough}
 
-\section{Demo Scenario and Walkthrough}
+This section describes a live demonstration designed to illustrate the real-time detection capabilities and transparent feedback mechanisms of ADRDS.
 
-ADRDS is designed as an interactive demonstration platform that allows users to observe, analyze, and understand ransomware detection in real time. The demo scenario showcases the end-to-end operation of the system, from behavior simulation to detection and response, emphasizing transparency and user-driven exploration.
+\subsection{Scenario Configuration}
 
-\subsection{Demo Setup}
+The demonstration is initiated within a sandboxed environment, with ADRDS calibrated to a verifiable benign state. The simulator generates standard background activity, including routine file access and process management, while the detection engine monitors the system. All detection thresholds are initialized to conservative default values, with the dashboard displaying nominal risk metrics.
 
-The demonstration is conducted within a controlled and sandboxed environment to ensure safety and reproducibility. At the start of the demo, the system is initialized in a benign state, where normal application behavior is simulated and monitored by the ADRDS pipeline. All detection thresholds are set to conservative default values to reflect a realistic deployment baseline.
+\subsection{Demonstration Phases}
 
-The visualization dashboard presents the initial system state, including baseline behavioral metrics, zero or low risk scores, and inactive alert indicators.
+The scenario proceeds through three distinct phases, each representing an escalation in the simulated threat level.
 
-\subsection{Scenario Execution}
+\textbf{Phase 1: Baseline Operation.}
+The simulator executes a typical user workload, consisting of document operations and application launches. The detection engine classifies these activities as benign, maintaining low risk scores. This establishes a baseline for normal operational behavior.
 
-The demo proceeds through a sequence of progressively malicious scenarios that align with the behavioral taxonomy described earlier.
+\textbf{Phase 2: Pre-Encryption Indicators.}
+The simulation intensity is increased to introduce early warning behaviors, such as rapid directory traversal, elevated file enumeration, and minor process anomalies. Although no file encryption occurs, the anomaly detector identifies deviations from the baseline. Risk scores incrementally rise, and the temporal timeline reflects this shift in activity.
 
-\textbf{Stage 1: Benign Baseline Behavior.}  
-The simulator generates normal workload activity such as routine file access and process execution. The detection engine classifies this activity as benign, and the dashboard displays stable behavioral metrics with low risk scores.
+\textbf{Phase 3: Automated Attack Simulation.}
+The simulator transitions to the encryption phase, characterized by high-velocity file write operations, significant entropy spikes, and rapid file renaming. Both the supervised classifier and the anomaly detector are triggered, causing the cumulative risk score to exceed the alert threshold. Consequently, the dashboard issues a warning, and ADRDS initiates simulated containment protocols.
 
-\textbf{Stage 2: Pre-Encryption Ransomware Activity.}  
-Ransomware-like behaviors are introduced, including rapid file enumeration and increased process activity. Although no destructive actions occur at this stage, the anomaly detection component begins to register deviations from baseline behavior, resulting in a gradual increase in the system risk score.
+\subsection{Real-Time Visualization}
 
-\textbf{Stage 3: Active Encryption Simulation.}  
-The simulator escalates to high-intensity behaviors characteristic of ransomware encryption, such as burst file writes and sharp entropy variations. The supervised classifier and anomaly detector jointly flag the activity as malicious, causing the fused risk score to exceed the alert threshold.
+Throughout the demonstration, the visualization layer updates continuously. Observers can monitor the progression of attack stages on a temporal timeline, observe risk scores and confidence values increasing with suspicious events, and identify the precise moment thresholds are breached. Additionally, simulated response actions, such as process isolation and alert logging, are displayed. This transparency allows for the correlation of specific behavioral events with detection outcomes.
 
-\subsection{Detection and Response Visualization}
+\subsection{Interactive Elements}
 
-As malicious behavior intensifies, the visualization layer updates in real time to reflect attack progression and detection outcomes. Attack stages are highlighted on a temporal timeline, while risk scores and confidence values are dynamically updated.
+ADRDS emphasizes interactivity, allowing users to modify simulation intensity, adjust detection thresholds, and replay scenarios to observe varied outcomes. This capability facilitates immediate inquiry into system sensitivity and performance under different configurations, replacing abstract theoretical discussion with empirical observation.
 
-Once the detection threshold is crossed, ADRDS triggers simulated containment actions, such as process isolation and alert generation. These actions are visualized immediately, allowing observers to correlate behavioral changes with detection decisions and response outcomes.
+\subsection{Summary}
 
-\subsection{Interactive Exploration}
-
-A key feature of the demo is its interactive nature. Users can adjust simulation parameters, modify detection thresholds, and replay scenarios to explore how changes in attacker behavior or sensitivity settings impact detection performance. This capability enables hands-on experimentation and fosters intuitive understanding of ransomware behavior, detection trade-offs, and system responsiveness.
-
-\subsection{Demonstration Value}
-
-The demo walkthrough illustrates ADRDS’s ability to provide early-stage ransomware detection, transparent decision-making, and real-time feedback within a safe environment. By combining behavioral simulation, hybrid machine learning, and interactive visualization, ADRDS serves as both an educational tool and an experimental platform for evaluating ransomware detection strategies.
-
+The demonstration effectively highlights the system's capacity for early-stage detection, transparent decision-making, and responsive feedback within a secure environment. It underscores the efficacy of combining behavioral simulation, hybrid machine learning, and interactive visualization to provide a rigorous yet accessible approach to ransomware detection.

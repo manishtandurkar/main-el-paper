@@ -1,38 +1,23 @@
-% ============================================
-% RESULTS AND EVALUATION
-% ============================================
-
 \section{Results and Evaluation}
 
-This section presents the results obtained from the experimental evaluation of ADRDS and analyzes the effectiveness of the proposed hybrid detection framework. The evaluation focuses on detection accuracy, early-stage identification capability, robustness against novel attack behaviors, and system responsiveness under interactive conditions.
+This section assesses the quantitative performance of ADRDS, analyzing detection quality, computational efficiency, and practical applicability.
 
-\subsection{Supervised Detection Results}
+\subsection{Supervised Classifier Performance}
 
-The supervised machine learning models demonstrate strong performance in distinguishing ransomware-like behavior from benign activity. Models trained on benchmark-derived datasets achieve high classification accuracy, with consistent precision and recall across multiple simulated attack scenarios. Tree-based models, such as Random Forests and gradient-boosted classifiers, perform particularly well on structured behavioral features, indicating their suitability for ransomware detection tasks.
+The supervised models—specifically Random Forests and gradient-boosted trees—exhibited robust performance across diverse simulated ransomware scenarios. Precision, recall, and F$_1$-scores consistently remained high, confirming the efficacy of tree-based classifiers in processing tabular behavioral features. However, performance degradation was observed when introducing attack variants significantly developing from the training distribution. This result underscores the limitation of purely supervised learning in addressing novel threats, necessitating the integration of anomaly detection.
 
-These results confirm that supervised learning is effective for identifying known ransomware patterns when representative training data is available. However, performance degrades when encountering behaviors that deviate significantly from training distributions, highlighting the limitations of purely supervised approaches.
+\subsection{Anomaly Detection Results}
 
-\subsection{Anomaly Detection Performance}
+The LSTM-based autoencoder demonstrated significant utility in identifying behaviors undetected by supervised models. Reconstruction errors exhibited sharp increases during the pre-encryption and encryption stages, frequently indicating compromise prior to the completion of file encryption. Tests against benign workloads indicated a low false positive rate, suggesting the model successfully learned a tight representation of normal operational activity.
 
-The unsupervised LSTM-based autoencoder exhibits strong sensitivity to anomalous behavioral sequences associated with ransomware activity. Reconstruction error increases sharply during pre-encryption and encryption stages, enabling early detection of malicious behavior before sustained damage occurs.
+\subsection{Hybrid Risk Fusion}
 
-When evaluated against benign workloads, the anomaly detector maintains a low false positive rate, indicating that normal system activity is well captured by the learned representation. These findings demonstrate the effectiveness of anomaly-based detection for identifying previously unseen or evolving ransomware behaviors.
+The integration of supervised and unsupervised outputs via weighted risk fusion yielded superior results. Compared to isolated supervised detection, the fusion approach reduced false positives. Conversely, compared to standalone anomaly detection, it identified a broader spectrum of threats while minimizing noise. Crucially, the fused risk score exceeded alert thresholds earlier than individual component scores, enabling more rapid warning issuance and extended response windows.
 
-\subsection{Hybrid Risk Fusion Analysis}
+\subsection{System Latency}
 
-Combining supervised classification outputs with anomaly detection scores through risk fusion significantly improves overall detection robustness. The hybrid approach reduces false positives compared to anomaly detection alone while preserving sensitivity to novel attacks that may evade supervised models.
+End-to-end latency, measured from event generation to dashboard update, consistently remained below one second across all experiments. This responsiveness is essential for interactive demonstrations and exploratory research, ensuring uninterrupted user engagement.
 
-Evaluation across multiple attack intensities shows that the fused risk score consistently exceeds detection thresholds earlier than individual model outputs. This early-stage detection capability is particularly valuable for ransomware mitigation, as it enables response actions to be triggered before large-scale encryption activity occurs.
+\subsection{Conclusion of Results}
 
-\subsection{Latency and System Responsiveness}
-
-ADRDS maintains near real-time performance across all evaluated scenarios. End-to-end latency, measured from behavioral event generation to visualization update, remains within sub-second bounds. This responsiveness ensures that detection feedback is presented promptly during interactive demonstrations and supports real-time exploratory analysis.
-
-The low latency observed confirms that the system architecture and lightweight feature processing pipeline are suitable for interactive and educational use cases, as well as for experimental ransomware detection research.
-
-\subsection{Evaluation Summary}
-
-Overall, the evaluation demonstrates that ADRDS effectively balances detection accuracy, robustness, and responsiveness. Supervised models provide reliable identification of known ransomware behaviors, while unsupervised anomaly detection enhances resilience against novel attack patterns. The hybrid fusion mechanism further strengthens early detection capabilities and reduces false alarms.
-
-These results validate ADRDS as a practical and safe platform for ransomware detection experimentation, interactive demonstrations, and educational exploration, while also highlighting its potential applicability to real-world defensive security research.
-
+In summary, ADRDS achieves high detection accuracy, robust handling of novel attacks, and real-time performance suitable for hands-on exploration. Supervised models address known threats, the autoencoder identifies anomalies, and risk fusion integrates these inputs into a actionable metric. These results validate ADRDS as a viable platform for ransomware research, educational instruction, and interactive security demonstrations.
