@@ -11,22 +11,36 @@ Catching ransomware early requires understanding how it behaves over time. Rathe
 We model ransomware as a sequence of stages, each defined by the host-level events it produces. Recognizing these stages helps ADRDS detect partial attacks and estimate how far an intrusion has progressed.
 
 \subsubsection{Stage 1: Reconnaissance and Setup}
-In the opening moments, ransomware probes its environment. It might enumerate directories, query system information, or check for virtual machine artifacts that could indicate a sandbox. These actions are subtle, but they set the stage for what comes next.
+In the opening moments, ransomware probes its environment. It might enumerate directories, query system information, or check for virtual machine artifacts that could indicate a sandbox. These actions are subtle, but they set the stage for what comes next. Observable indicators include elevated directory listing operations, registry queries for system configuration, and process enumeration activities. The reconnaissance phase typically exhibits lower activity intensity compared to subsequent stages, making early detection challenging but not impossible.
 
 \subsubsection{Stage 2: Privilege Escalation and Persistence}
-Once reconnaissance wraps up, attackers often try to strengthen their grip. We see abnormal process spawning, modifications to startup entries, and interactions with system-level resources. These moves expand access and help the malware survive reboots.
+Once reconnaissance wraps up, attackers often try to strengthen their grip. We see abnormal process spawning, modifications to startup entries, and interactions with system-level resources. These moves expand access and help the malware survive reboots. Specific indicators include modifications to autorun registry keys, creation of scheduled tasks, service installation attempts, and interactions with Windows Management Instrumentation (WMI). The temporal clustering of these activities distinguishes malicious behavior from legitimate administrative operations.
 
 \subsubsection{Stage 3: File Enumeration and Targeting}
-Before encrypting anything, ransomware identifies its targets. This stage features high-volume read operations, rapid directory traversal, and selective filtering based on file extensions or folder paths. The burst of file activity stands out sharply against typical user workloads.
+Before encrypting anything, ransomware identifies its targets. This stage features high-volume read operations, rapid directory traversal, and selective filtering based on file extensions or folder paths. The burst of file activity stands out sharply against typical user workloads. Common targeting strategies include extension-based filtering (prioritizing documents, databases, and media files), path-based exclusion (avoiding system directories to maintain operability), and size-based selection (targeting files within specific size ranges to optimize encryption throughput).
 
 \subsubsection{Stage 4: Encryption and Destruction}
-Here the damage happens. Intensive file writes, sudden renames, and sharp entropy spikes mark the encryption phase. Files transform from readable documents into scrambled blobs at a pace that no ordinary application would match.
+Here the damage happens. Intensive file writes, sudden renames, and sharp entropy spikes mark the encryption phase. Files transform from readable documents into scrambled blobs at a pace that no ordinary application would match. The encryption phase exhibits distinctive characteristics including sustained high write throughput, dramatic entropy increases in modified files, systematic file renaming with appended extensions, and deletion or modification of Volume Shadow Copies. The intensity and patterns of these operations provide strong detection signals.
 
 \subsubsection{Stage 5: Communication and Wrap-Up}
-Some ransomware phones home after encryption—exchanging keys, reporting success, or awaiting further instructions. We watch for anomalous network connections and communication patterns that coincide with the encryption window.
+Some ransomware phones home after encryption—exchanging keys, reporting success, or awaiting further instructions. We watch for anomalous network connections and communication patterns that coincide with the encryption window. Indicators include connections to previously unobserved external hosts, encrypted traffic to non-standard ports, and communication periodicity aligned with attack progression.
 
-Each stage translates into measurable indicators that ADRDS extracts and monitors. These include file system metrics such as access frequency, modification rate, and entropy changes; process-level attributes like CPU load, spawning patterns, and API call rates; temporal patterns such as burstiness and sustained high-activity windows; and stage context indicating which phase the current activity aligns with. By correlating low-level telemetry with high-level attack stages, the system can identify suspicious behavior and attribute it to a specific lifecycle phase.
+\subsection{Observable Indicators and Feature Extraction}
+
+Each stage translates into measurable indicators that ADRDS extracts and monitors. The feature extraction process transforms raw telemetry into structured representations suitable for machine learning analysis.
+
+\textbf{File System Metrics.} These include access frequency across file types, modification rate relative to baseline patterns, entropy changes in modified content, directory traversal depth and breadth, and file operation sequencing patterns. Entropy analysis proves particularly valuable, as legitimate file modifications typically produce modest entropy changes, whereas encryption dramatically increases file entropy toward maximum theoretical values.
+
+\textbf{Process-Level Attributes.} The system monitors CPU utilization patterns, memory consumption trajectories, child process spawning rates, API call frequencies and sequences, and handle creation for files and system objects. Ransomware typically exhibits elevated resource consumption during encryption phases, providing additional detection opportunities.
+
+\textbf{Temporal Patterns.} Detection logic incorporates burstiness metrics that quantify activity concentration, sustained high-activity window detection, inter-event timing analysis, and phase transition identification. The temporal dimension enables differentiation between continuous legitimate workloads and the episodic intensity characteristic of ransomware operations.
+
+\textbf{Stage Context.} Each observation is annotated with the most probable attack stage based on behavioral patterns, enabling stage-aware alerting and response prioritization.
+
+By correlating low-level telemetry with high-level attack stages, the system can identify suspicious behavior and attribute it to a specific lifecycle phase.
 
 \subsection{Why This Taxonomy Matters}
 
 The behavioral taxonomy is not just academic scaffolding—it shapes everything ADRDS does. It guides how we extract features, what the ML models learn, and how the visualization layer presents results. Because detection is stage-aware, ADRDS can catch ransomware during early reconnaissance or file enumeration, often before any real damage occurs. Equally important, linking alerts to specific stages makes outputs interpretable, giving analysts and students concrete context instead of opaque scores.
+
+The taxonomy also enables graduated response strategies. Detection during early stages may trigger enhanced monitoring and alerting, while detection during active encryption warrants immediate containment actions. This proportional response capability reduces operational disruption from false positives while ensuring rapid reaction to confirmed threats.
