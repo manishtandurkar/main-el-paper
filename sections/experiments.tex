@@ -22,22 +22,13 @@ For supervised models, training was performed using labeled samples from the Big
 
 Performance was assessed using standard classification metrics—accuracy, precision, recall, and F$_1$-score—for the supervised classifiers. For the anomaly detector, reconstruction error distributions and threshold-dependent true positive and false positive rates were examined. Additionally, end-to-end latency was measured, defined as the interval from behavioral event generation to dashboard update, to assess the system's suitability for real-time interaction.
 
-\textbf{Accuracy} measures the proportion of correct classifications among all samples. \textbf{Precision} quantifies the fraction of positive predictions that are actually positive, relevant for minimizing false alarms. \textbf{Recall} measures the fraction of actual positives correctly identified, critical for ensuring threats are not missed. \textbf{F$_1$-score} provides the harmonic mean of precision and recall, balancing both considerations.
+Accuracy measures the proportion of correct classifications among all samples. Precision quantifies the fraction of positive predictions that are actually positive, relevant for minimizing false alarms. Recall measures the fraction of actual positives correctly identified, critical for ensuring threats are not missed. F$_1$-score provides the harmonic mean of precision and recall, balancing both considerations.
 
 For the anomaly detection component, we employed Receiver Operating Characteristic (ROC) curves and Area Under the Curve (AUC) metrics to evaluate performance across the full threshold range. Precision-Recall curves provided additional insight into performance under class imbalance.
 
 \subsection{Experimental Parameters}
 
-The following parameters governed experimental execution:
-
-\begin{itemize}
-\item \textbf{Window Size:} 5-second sliding windows with 50\% overlap
-\item \textbf{Feature Dimensions:} 48 behavioral features per window
-\item \textbf{Random Forest Configuration:} 100 estimators, maximum depth 15, minimum samples per leaf 5
-\item \textbf{LSTM Autoencoder:} 2 LSTM layers (64, 32 units), latent dimension 16, trained for 50 epochs
-\item \textbf{Threshold Range:} 0.3 to 0.9 in 0.1 increments for sensitivity analysis
-\item \textbf{Attack Scenarios:} 20 distinct configurations varying encryption rate (100-10,000 files/minute) and targeting strategy
-\end{itemize}
+The experimental configuration employed 5-second sliding windows with 50\% overlap for event aggregation, extracting 48 behavioral features per window. The Random Forest classifier utilized 100 estimators with maximum depth 15 and minimum samples per leaf 5, while the LSTM autoencoder comprised two layers with 64 and 32 units respectively, a latent dimension of 16, and was trained for 50 epochs. Sensitivity analysis varied detection thresholds from 0.3 to 0.9 in 0.1 increments. The evaluation encompassed 20 distinct attack scenarios with encryption rates ranging from 100 to 10,000 files per minute across varied targeting strategies.
 
 \subsection{Detection Performance}
 
