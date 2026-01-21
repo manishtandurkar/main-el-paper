@@ -1,0 +1,94 @@
+%Version 3.1 December 2024
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                 %%
+%% Please do not use \input{...} to include other tex files.       %%
+%% Submit your LaTeX manuscript as one .tex document.              %%
+%%                                                                 %%
+%% All additional figures and files should be attached             %%
+%% separately and not embedded in the \TeX\ document itself.       %%
+%%                                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
+
+%%%% Standard Packages
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%
+\usepackage[title]{appendix}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc}
+
+\raggedbottom
+
+\begin{document}
+
+\title[ADRDS: Adaptive Dynamic Ransomware Detection System]{ADRDS: Adaptive Dynamic Ransomware Detection System}
+
+\author*[1]{\fnm{S. Anupama} \sur{Kumar}}\email{anupamakumar@rvce.edu.in}
+
+\author[2]{\fnm{Manish} \sur{Tandurkar}}\email{manishtandurkar.cs23@rvce.edu.in}
+
+\author[2]{\fnm{Manish H} \sur{Parashar}}\email{manishhparashar.cs23@rvce.edu.in}
+
+\author[2]{\fnm{Nikhil N} \sur{Bharadwaj}}\email{nikhilnb.cs23@rvce.edu.in}
+
+\author[3]{\fnm{Vinay} \sur{Sinnur}}\email{vinaysinnur.is23@rvce.edu.in}
+
+\author[1]{\fnm{Aditya} \sur{Tripathi}}\email{adityatripathi.ai23@rvce.edu.in}
+
+\affil*[1]{\orgdiv{Dept. of Artificial Intelligence and Machine Learning}, \orgname{RV College of Engineering}, \orgaddress{\city{Bangalore}, \country{India}}}
+
+\affil[2]{\orgdiv{Dept. of Computer Science}, \orgname{RV College of Engineering}, \orgaddress{\city{Bangalore}, \country{India}}}
+
+\affil[3]{\orgdiv{Dept. of Information Science}, \orgname{RV College of Engineering}, \orgaddress{\city{Bangalore}, \country{India}}}
+
+\abstract{Ransomware has emerged as a critical threat to organizational and individual security, characterized by file encryption, extortion, and substantial operational disruption. Traditional signature-based detection mechanisms exhibit limited efficacy against novel and obfuscated variants, particularly zero-day exploits that evade static pattern-matching approaches.
+
+This paper presents ADRDS (Adaptive Dynamic Ransomware Detection and Response System), an AI-driven platform employing behavior-based analysis to identify ransomware activity. The system integrates a secure behavioral simulator that replicates ransomware execution patterns—including entropy anomalies, atypical API invocation sequences, and elevated file I/O bursts—without deploying malicious binaries. Behavioral telemetry is processed through a hybrid machine learning architecture comprising supervised classifiers trained on established datasets such as BigMalware and EMBER, alongside an unsupervised LSTM-based autoencoder designed to detect previously unseen variants.
+
+Detection outputs are fused into a unified risk metric, enabling early-stage threat identification with enhanced confidence. The platform incorporates automated response simulations and a real-time visualization dashboard, facilitating transparent, step-by-step observation of detection processes. Experimental validation demonstrates that the proposed hybrid strategy achieves robust detection performance while maintaining operational safety and scalability. ADRDS serves as a valuable resource for security research, interactive training environments, and the development of advanced cyber defense systems.}
+
+\keywords{Ransomware detection, Behavioral analysis, Machine learning, Security demonstration, Threat modeling, Intrusion detection}
+
+\maketitle
+
+\input{sections/introduction}
+
+\input{sections/related_work}
+
+\input{sections/threat_model}
+
+\input{sections/system_overview}
+
+\input{sections/taxonomy}
+
+\input{sections/implementation}
+
+\input{sections/demo}
+
+\input{sections/experiments}
+
+\input{sections/results}
+
+\input{sections/discussion}
+
+\input{sections/conclusion}
+
+\section*{Acknowledgments}
+The authors gratefully acknowledge the support and resources provided by their respective institutions that made this research possible. We extend our sincere appreciation to the security research community for their invaluable contributions to ransomware detection methodologies and publicly available datasets. Special thanks are due to the developers of the BigMalware and EMBER datasets, which were instrumental in training and validating our detection models.
+
+\bibliographystyle{sn-mathphys-num}
+\bibliography{references}
+
+\end{document}
