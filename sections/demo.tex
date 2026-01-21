@@ -12,22 +12,24 @@ The scenario proceeds through three distinct phases, each representing an escala
 
 During the initial baseline operation phase, the simulator executes a typical user workload consisting of document operations and application launches. The detection engine classifies these activities as benign, maintaining low risk scores, thereby establishing a baseline for normal operational behavior.
 
+\renewcommand{\thefigure}{7.1}
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/Dashboard_light.png}
 \caption{Main dashboard interface displaying system status, real-time metrics, and machine learning model health during baseline operation.}
-\label{fig:dashboard}
+\label{fig:7.1}
 \end{figure}
 
 The second phase introduces pre-encryption indicators as simulation intensity is increased without actual file encryption. This phase exhibits early warning behaviors such as rapid directory traversal, elevated file enumeration, and minor process anomalies. Although no encryption occurs, the anomaly detector identifies deviations from the baseline, causing risk scores to incrementally rise while the temporal timeline reflects this shift in activity.
 
 The third phase initiates automated attack simulation as the simulator transitions to the encryption phase, characterized by high-velocity file write operations, significant entropy spikes, and rapid file renaming. Both the supervised classifier and the anomaly detector are triggered, causing the cumulative risk score to exceed the alert threshold. Consequently, the dashboard issues a warning and ADRDS initiates simulated containment protocols.
 
+\renewcommand{\thefigure}{7.2}
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/Live monitor_light.png}
 \caption{Real-time system telemetry monitoring displaying CPU usage, memory consumption, disk I/O, network activity, risk assessment, and top resource consumers during active threat detection.}
-\label{fig:livemonitor}
+\label{fig:7.2}
 \end{figure}
 
 \subsection{Real-Time Visualization}
