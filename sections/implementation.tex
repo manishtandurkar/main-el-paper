@@ -10,6 +10,16 @@ Machine learning components employ scikit-learn for traditional supervised class
 
 Inter-component communication employs WebSocket connections for low-latency bidirectional data flow, ensuring that behavioral events, detection outputs, and visualization updates propagate with minimal delay. This architecture supports both local deployment for individual experimentation and networked deployment for classroom or team environments.
 
+\subsection{Dataset Description}
+
+\textbf{BigMalware Dataset.} The BigMalware dataset comprises behavioral traces from over 50,000 malware samples collected from multiple sources including VirusTotal submissions and honeypot captures. For our experiments, we utilized a subset of approximately 8,000 ransomware samples spanning 15 distinct families including WannaCry, Locky, CryptoLocker, Ryuk, and Maze. Behavioral features were extracted from dynamic analysis logs capturing file system activity, process behavior, and resource utilization.
+
+\textbf{EMBER Dataset.} The Elastic Malware Benchmark for Empowering Researchers (EMBER) \cite{anderson2018ember} provides feature vectors for approximately 1.1 million portable executable files, including both benign applications and malware. We utilized the behavioral subset focusing on ransomware-relevant features including file operation patterns, API call sequences, and entropy characteristics.
+
+\textbf{Synthetic Benign Workloads.} To train the unsupervised anomaly detector and evaluate false positive rates, we generated synthetic benign workloads simulating common user activities including document editing, web browsing, software compilation, and media playback. These workloads were designed to include edge cases such as batch file operations and compression activities that might exhibit superficial similarity to ransomware behavior.
+
+For supervised models, training was performed using labeled samples from the BigMalware dataset and subsets of EMBER. The unsupervised autoencoder was trained exclusively on benign activity traces to establish a baseline of normality. Both components were subsequently evaluated against simulated attack scenarios varying in intensity, velocity, and behavioral patterns.
+
 \subsection{Behavioral Simulation Engine}
 
 The simulation engine replicates ransomware behavior without the execution of malicious binaries. It operates on a state-driven model aligned with the taxonomy described in Section~IV, transitioning through attack stages and emitting timestamped events. Each event captures host-level activity—including file operations, process generation, and resource utilization—analogous to actual telemetry.
