@@ -1,0 +1,185 @@
+\documentclass{ieeeaccess}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+\history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
+\doi{10.1109/ACCESS.2017.DOI}
+
+\title{VegShift: Detecting Crop Viability Loss Events After Climate Zone Transitions in Indian Cities Using Multi-Source Geospatial and Temporal Deep Learning}
+
+\author{\uppercase{Author Name}\authorrefmark{1}}
+\address[1]{Department, Institution, City, Country (e-mail: email@institution.ac.in)}
+
+\tfootnote{Placeholder for funding and support acknowledgment.}
+
+\markboth
+{Author \headeretal: VegShift: Detecting Crop Viability Loss Events}
+{Author \headeretal: VegShift: Detecting Crop Viability Loss Events}
+
+\corresp{Corresponding author: Author Name (e-mail: email@institution.ac.in).}
+
+\begin{abstract}
+Placeholder abstract: This paper presents VegShift, a framework for detecting Crop Viability Loss Events (CVLEs) triggered by Köppen-Geiger climate zone transitions across ten major Indian cities over 2000–2024, using a multi-source fusion of atmospheric, hydrological, and agro-ecological data with an eight-model comparative deep learning study.
+\end{abstract}
+
+\begin{keywords}
+crop viability loss, climate zone transition, Köppen-Geiger, groundwater depletion, temporal deep learning, TFT, CVLE, India agriculture
+\end{keywords}
+
+\titlepgskip=-15pt
+
+\maketitle
+
+% -----------------------------------------------------------------------
+\section{Introduction}
+\label{sec:introduction}
+% -----------------------------------------------------------------------
+
+\PARstart{C}{limate-driven} agricultural risk in India remains poorly quantified at the city scale, particularly the moment when a shifting climate permanently renders a crop non-viable. Existing work either uses static agroclimatic zones or single-variable thresholds; VegShift addresses this gap by formally timestamping viability loss events tied to climate zone transitions. This paper makes three contributions: (1) the CVLE dual-deficit event definition, (2) a 3-source geospatial dataset fusion spanning 25 years across 10 cities, and (3) a comparative study of 8 models with uncertainty quantification.
+
+% -----------------------------------------------------------------------
+\section{Related Work}
+\label{sec:related_work}
+% -----------------------------------------------------------------------
+
+\subsection{Köppen-Geiger Classification in Agriculture}
+Placeholder: Prior use of Köppen zones for agroclimatic zoning and its limitations under non-stationary climate.
+
+\subsection{Crop Failure Prediction}
+Placeholder: Survey of ML-based crop failure prediction methods, noting the predominance of single-variable rainfall or temperature thresholds.
+
+\subsection{Groundwater Depletion and Agricultural Interaction}
+Placeholder: Literature on CGWB-documented aquifer depletion trends and their link to irrigation-dependent crop failure in India.
+
+\subsection{Temporal Deep Learning for Climate Applications}
+Placeholder: Review of TFT, LSTM, TCN, and Transformer architectures applied to climate time-series classification and forecasting.
+
+% -----------------------------------------------------------------------
+\section{Study Area and Data}
+\label{sec:data}
+% -----------------------------------------------------------------------
+
+\subsection{Study Cities and Crop Assignments}
+Placeholder: Description of the 10 Indian cities (Delhi, Mumbai, Kolkata, Chennai, Bangalore, Hyderabad, Ahmedabad, Jaipur, Lucknow, Pune), their assigned crops, and the at-risk vs.\ control city grouping.
+
+\subsection{Dataset 1: Daily Atmospheric Climate}
+Placeholder: Open-Meteo / Kaggle Historical Weather Dataset covering 10 cities × 25 years of daily temperature, precipitation, and wind; humidity derived via Steadman apparent-temperature inversion.
+
+\subsection{Dataset 2: CGWB Groundwater Levels}
+Placeholder: Central Groundwater Board seasonal well readings (2000–2022) for 2,759 wells aggregated within 50 km city radii; imputation strategy for Jaipur (nearest-well proxy) and post-2022 gap.
+
+\subsection{Dataset 3: FAO GAEZ v4 Crop Suitability}
+Placeholder: GeoTIFF rasters at 9 km resolution providing rainfed baseline suitability scores (1–7) for each city-crop pair, extracted at city centroids.
+
+% -----------------------------------------------------------------------
+\section{Methodology}
+\label{sec:methodology}
+% -----------------------------------------------------------------------
+
+\subsection{Köppen-Geiger Classification and Transition Detection}
+Placeholder: Rule-based classification per Peel et al.\ (2007) applied annually; persistence filter requiring 3+ consecutive years before a transition is recorded.
+
+\subsection{Annual Feature Engineering}
+Placeholder: Derivation of 17 time-varying features (GDD accumulation, monsoon onset DOY, crop water deficit, recharge efficiency, dual-deficit flag, etc.) and 5 static features from ECOCROP and GAEZ.
+
+\subsection{Crop Viability Loss Event (CVLE) Definition}
+Placeholder: Formal dual-deficit definition requiring consecutive-year atmospheric and hydrological failure with at least 2 of 3 threshold breaches; pseudocode provided as Algorithm~\ref{alg:cvle}.
+
+\begin{algorithm}
+\caption{CVLE Label Construction}
+\label{alg:cvle}
+\begin{algorithmic}[1]
+\FOR{each city}
+  \FOR{$t = 1$ \TO $T$}
+    \STATE $\textit{consec} \leftarrow \textit{dual\_deficit}[t] = 1 \;\wedge\; \textit{dual\_deficit}[t{-}1] = 1$
+    \STATE $s \leftarrow \mathbb{1}[\textit{sowing\_window\_miss}[t] > 0.6] + \mathbb{1}[\textit{crop\_water\_deficit}[t] > 0.4] + \mathbb{1}[\textit{gdd\_adequate}[t] = 0]$
+    \STATE $\textit{cvle\_label}[t] \leftarrow 1$ \textbf{if} $\textit{consec} \wedge s \geq 2$ \textbf{else} $0$
+  \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Model Architectures}
+Placeholder: Overview of all 8 models — Temporal Fusion Transformer (TFT), Random Forest, Logistic Regression, XGBoost, LightGBM, LSTM, TCN, and Vanilla Transformer — with hyperparameters.
+
+\subsection{Train/Validation/Test Split}
+Placeholder: Temporal split (train 2000–2018, val 2000–2021, test 2022–2024) with no data shuffling to prevent leakage; class imbalance (7.6\% positive) and handling strategies.
+
+\subsection{Evaluation Metrics and Threshold Optimisation}
+Placeholder: AUC-ROC, macro-F1, Brier score, accuracy; classification threshold selected by F1-macro grid search over the validation set rather than fixed at 0.5.
+
+\subsection{Uncertainty Quantification}
+Placeholder: Monte Carlo dropout (50 forward passes) for LSTM, TCN, and Transformer; tree variance for Random Forest; Expected Calibration Error (ECE) computed with 10-bin histogram.
+
+\subsection{Feature Group Ablation}
+Placeholder: Five mutually exclusive feature groups (Climate, Phenology, Hydrology, Static Context, All Features) evaluated independently on RF, XGB, and LSTM.
+
+% -----------------------------------------------------------------------
+\section{Experiments and Results}
+\label{sec:results}
+% -----------------------------------------------------------------------
+
+\subsection{Unified Test-Set Performance}
+Placeholder: Table comparing all 8 models on AUC-ROC, macro-F1, Brier score, accuracy, and optimal threshold (test set: $n=30$, years 2022–2024).
+
+\subsection{Pairwise Statistical Significance}
+Placeholder: Wilcoxon signed-rank test on per-sample Brier loss across 28 model pairs; results indicate which performance differences are statistically significant at $p < 0.05$.
+
+\subsection{Feature Group Ablation Results}
+Placeholder: Static context alone (GAEZ baseline + Köppen encoding) achieves AUC$\geq$0.98 for tree models; hydrological features are the dominant group for recurrent models.
+
+\subsection{Uncertainty Quantification Results}
+Placeholder: Random Forest tree-variance achieves the lowest ECE (0.045), outperforming all MC-dropout neural methods; interval widths and mean prediction std reported per model.
+
+\subsection{SHAP Feature Importance}
+Placeholder: Global mean $|\text{SHAP}|$ rankings from RF, XGB, and LGB; \texttt{gaez\_baseline\_class} and \texttt{koppen\_zone\_enc} dominate, confirming ablation findings.
+
+\subsection{CVLE Event Timeline Per City}
+Placeholder: Dated CVLE events for the 7 at-risk cities; control cities (Pune, Kolkata, Mumbai) produce near-zero CVLE rates, validating the dual-deficit formulation.
+
+% -----------------------------------------------------------------------
+\section{Discussion}
+\label{sec:discussion}
+% -----------------------------------------------------------------------
+
+\subsection{Why Simple Models Outperform Deep Models}
+Placeholder: The CVLE classification problem is largely linearly separable in feature space at $n=250$; LR achieves AUC$=$1.0 while TFT collapses to AUC$=$0.069.
+
+\subsection{Why TFT Fails}
+Placeholder: QuantileLoss is designed for multi-horizon regression, not binary classification; the 250-row dataset is insufficient for the ~115k-parameter model.
+
+\subsection{Role of Static versus Dynamic Features}
+Placeholder: Static GAEZ and Köppen features carry near-complete predictive signal; time-varying features add marginal value except for recurrent models exploiting groundwater trends.
+
+\subsection{Groundwater as the Differentiating Signal for Recurrent Models}
+Placeholder: Hydrological features achieve LSTM AUC$=$0.8621, the highest single-group AUC for sequential architectures, underscoring aquifer depletion as a lagged viability signal.
+
+\subsection{Limitations and Validity Threats}
+Placeholder: Key limitations include the small test set ($n=30$, 1 positive), CGWB data ending in 2022, Jaipur nearest-well proxy, humidity estimation from temperature inversion, and subjectively chosen CVLE thresholds.
+
+% -----------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:conclusion}
+% -----------------------------------------------------------------------
+
+VegShift introduces the first formal dual-deficit Crop Viability Loss Event framework tied to Köppen climate zone transitions, validated across 10 Indian cities over 25 years. Random Forest is the recommended deployment model (AUC$=$0.9655, ECE$=$0.045), while the CVLE definition is validated by near-zero false detection in stable control cities. Future work should extend to a wider geographic scope and incorporate ground-truth crop yield records for threshold calibration.
+
+% -----------------------------------------------------------------------
+\appendices
+\section*{Acknowledgment}
+Placeholder for acknowledgment of data sources (CGWB, Open-Meteo, FAO GAEZ) and funding.
+
+% -----------------------------------------------------------------------
+\begin{thebibliography}{00}
+\bibitem{b1} Placeholder reference.
+\end{thebibliography}
+
+\EOD
+
+\end{document}
