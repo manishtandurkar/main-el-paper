@@ -85,11 +85,171 @@ Placeholder: GeoTIFF rasters at 9 km resolution providing rainfed baseline suita
 \subsection{Köppen-Geiger Classification and Transition Detection}
 Placeholder: Rule-based classification per Peel et al.\ (2007) applied annually; persistence filter requiring 3+ consecutive years before a transition is recorded.
 
-\subsection{Annual Feature Engineering}
-Placeholder: Derivation of 17 time-varying features (GDD accumulation, monsoon onset DOY, crop water deficit, recharge efficiency, dual-deficit flag, etc.) and 5 static features from ECOCROP and GAEZ.
+\subsection{4B. Annual Feature Engineering}
 
-\subsection{Crop Viability Loss Event (CVLE) Definition}
-Placeholder: Formal dual-deficit definition requiring consecutive-year atmospheric and hydrological failure with at least 2 of 3 threshold breaches; pseudocode provided as Algorithm~\ref{alg:cvle}.
+We build a feature space of two groups of features: 17 time-invariant and 5 static features, which capture climate shifts, groundwater depletion, and crop phenology, respectively.
+
+\subsubsection{1. Atmospheric and Climate Features}
+
+These characteristics represent the annual energy, moisture and baseline dry season characteristics:
+
+\begin{itemize}
+    \item \textbf{temp\_mean \& temp\_max}: Average of the maximum and minimum temperatures over a given day (C) (over the year).
+
+    \item \textbf{rainfall\_annual}: Total annual precipitation (mm).
+
+    \item \textbf{wind\_speed}: Annual mean of the daily maximum wind speed (m/s) (3.6 divides the value of wind speed).
+
+    \item \textbf{humidity}: Relative humidity (\%) estimated using Steadman's apparent temperature inversion. Actual vapor pressure is calculated as
+    \[
+    e = \frac{AT_{\text{mean}} - T_{\text{mean}} + 0.70 \times wind_{ms} + 4.00}{0.33}
+    \]
+    saturation vapor pressure as
+    \[
+    e_s = 6.1078 \times \exp\left(\frac{17.27 \times T_{\text{mean}}}{237.3 + T_{\text{mean}}}\right)
+    \]
+    and relative humidity as
+    \[
+    RH = \operatorname{clip}\left(\frac{e}{e_s} \times 100,\;5,\;100\right).
+    \]
+
+    \item \textbf{n\_dry\_months}: The number of dry months in a year (month with rainfall of less than 60 mm).
+\end{itemize}
+
+\subsubsection{2. Phenological and Agro-Climatic Features}
+
+These simulate the window requirements and the cropping requirements:
+
+\begin{itemize}
+    \item \textbf{monsoon\_onset\_doy}: First day-of-year (after DOY 121 / May 1st) during which 5-day cumulative rainfall is greater than 25 mm and on that day, at least 3 rainy days (IMD standard).
+
+    \item The sowing window miss, which is the difference between the sowing window of the crop, calculated as the difference between the day of the monsoon onset and the optimal sowing date, divided by 30.
+
+    \item \textbf{gdd\_accumulation}: accumulated GDD from April to September:
+    \[
+    \sum \max(T_{\text{daily\_mean}} - T_{\text{base}},0)
+    \]
+
+    \item \textbf{gdd\_adequate}: Binary flag that is true when
+    \[
+    gdd_{\text{accumulation}} \ge gdd_{\min}.
+    \]
+
+    \item \textbf{crop\_water\_deficit}: Fractional precipitation shortfall:
+    \[
+    \frac{water_{\text{req}} - rainfall_{\text{annual}}}
+         {water_{\text{req}}}.
+    \]
+\dots
+\end{itemize}
+
+\subsubsection{3. Hydrological and Aquifer Features}
+
+From observation wells in a 50 km radius from the city's centroid:
+
+\begin{itemize}
+    \item \textbf{pre\_monsoon\_depth\_mbgl}: Median groundwater level in metres below ground (mbgl) measured in May.
+
+    \item \textbf{depletion\_rate}: the change in January groundwater depth from the previous year (YoY change in ground water depth:
+    \[
+    Jan\_depth(t) - Jan\_depth(t-1)
+    \]
+    )
+
+    \item \textbf{recharge\_efficiency}: This is the aquifer rise per unit of rain
+    \[
+    \frac{May\_depth - August\_depth}
+         {rainfall_{\text{annual}}}.
+    \]
+
+    \item \textbf{dual\_deficit}: binary variable that is 1 when the atmospheric failure (crop\_water\_deficit) and hydrological failure (recharge\_efficiency) occur simultaneously; 0 otherwise.
+\end{itemize}
+
+\subsubsection{4. Static Context and Cyclicity Features}
+
+These are geographical baseline, crop thresholds and cyclical indicators:
+
+\begin{itemize}
+    \item \textbf{GAEZ crop suitability score (1-7)} refers to the \textbf{gaez\_baseline\_class}: Static baseline (1981-2010).
+
+    \item \textbf{koppen\_zone\_enc}: Annual Köppen-Geiger zone, in integer encoding.
+
+    \item \textbf{gdd\_min}: Minimum gdd needed for each crop.
+
+    \item \textbf{water\_req}: Water requirement by each crop.
+
+    \item \textbf{cycle\_sin\_5yr \& cycle\_cos\_5yr}: 5-year periodic cycle signals for temporal models:
+    \[
+    \sin\left(\frac{2\pi \times year\_index}{5}\right)
+    \]
+    \[
+    \cos\left(\frac{2\pi \times year\_index}{5}\right).
+    \]
+\end{itemize}
+
+\subsection{4C. Crop Viability Loss Event (CVLE) Definition}
+
+Crop failure is generally modelled in traditional agricultural risk assessments with fixed agro-climatic zones or single variable indices like the Standardized Precipitation Index (SPI). These approaches do not, however, take into account the adaptive capacity of agricultural systems, in this case groundwater irrigation if rain fails; nor are they able to represent non-stationary trends caused by climate change.
+
+To overcome these, a new, localized approach is proposed called the Crop Viability Loss Event (CVLE). CVLE is a formally dated, year in which a specific crop species cultivation becomes permanently non-viable in a city because simultaneous failure of atmospheric rainfall inputs and groundwater recharge buffers, plus acute phenological stress.
+
+\subsubsection{1) The Dual-Deficit Mechanism}
+
+The "dual-deficit" mechanism is at the core of the CVLE framework. But when there is a deficit in annual rainfall, farmers can tap the groundwater reserves to make up for the deficiency and therefore a shortfall does not immediately mean crop failure. But there's a limit to this buffering ability. A dual-deficit is a critical, simultaneous deficient of both the atmosphere and the hydrologic resources. It is formally activated in year $t$ if:
+
+\textbf{Atmospheric Deficit:} Crop water deficit is greater than $0.4$ which is more than 40\% of the crop water requirement:
+
+\[
+crop\_water\_deficit > 0.4
+\]
+
+\textbf{Hydrological Deficit:} Recharge efficiency is less than $0.30$ (less than 30\% recharge efficiency of the annual rainfall):
+
+\[
+recharge\_efficiency < 0.30
+\]
+
+Most importantly, a failed year of dual-deficit isn't an irreversible situation. Agricultural systems are resilient to short-term shocks, for example, an isolated El Niño drought event. A CVLE must have the dual-deficit condition in the target year $t$ and in the previous year $t-1$ occur in succession, not randomly:
+
+\[
+consec\_dual =
+(dual\_deficit[t] == 1)
+\land
+(dual\_deficit[t-1] == 1)
+\]
+
+This constraint of consecutive years provides an effective filtering mechanism that means a CVLE is only registered if environmental safety net has been systematically breached.
+
+\subsubsection{2) The phenological and agro-climatic thresholds}
+
+In addition to the resource deficits mentioned above, the crop has to be in severe physiological stress during year $t$ within the target year. The CVLE framework simulates this by computing three phenological thresholds for specific crops:
+
+\textbf{Sowing Window Miss ($t_1$):} Time lag between sowing date and optimal sowing date of the crop. A delay of the monsoon of more than $0.6$ months (about 18 days) shifts the crop's growing cycle. This delay causes the reproductive stages of the crop to occur in less favourable temperature conditions later in the season and results in a significant reduction in production:
+
+\[
+sowing\_window\_miss > 0.6
+\]
+
+\textbf{Annual Precipitation ($t_2$):} $< 40\%$ of the crop's specific water requirements are provided by annual precipitation:
+
+\[
+crop\_water\_deficit > 0.4
+\]
+
+\textbf{Thermal Insufficiency ($t_3$):} Assesses if the amount of thermal energy accumulated during the growing season (April to September) is adequate. If the sum of all thermal units is below the minimum amount needed for completion of the crop maturation (gdd\_min), the crop will not reach reproductive stage:
+
+Once this occurs, gdd\_adequate is set to 0 (or
+
+\[
+gdd\_accumulation < gdd\_min
+\]
+
+).
+
+\subsubsection{3) CVLE Integration Rule}
+
+A CVLE is formally declared when the consecutive dual-deficit condition is met, and at least 2 of these 3 phenological stress thresholds are exceeded, in year $t$. This multi-threshold formulation is based on the fact that crops can cope with a single stressor (e.g., late sowing date in the presence of sufficient water) but a combination of multiple stressors in the absence of a buffer in the resources results in total loss of viability. The logic is sequentially applied to each city for the 25 year study period, resulting in a binary target label (cvle\_label) for machine learning classification. The formal logic is given in Algorithm 1.
+
 
 \begin{algorithm}
 \caption{CVLE Label Construction}
@@ -105,14 +265,154 @@ Placeholder: Formal dual-deficit definition requiring consecutive-year atmospher
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Model Architectures}
-Placeholder: Overview of all 8 models — Temporal Fusion Transformer (TFT), Random Forest, Logistic Regression, XGBoost, LightGBM, LSTM, TCN, and Vanilla Transformer — with hyperparameters.
+\subsection{4D. Model Architectures}
 
-\subsection{Train/Validation/Test Split}
-Placeholder: Temporal split (train 2000–2018, val 2000–2021, test 2022–2024) with no data shuffling to prevent leakage; class imbalance (7.6\% positive) and handling strategies.
+In this study, we make an extensive comparative analysis of eight machine learning and deep learning models for predicting the Crop Viability Loss Events (CVLEs). The models range widely in algorithmic complexity from linear classifiers to cutting edge temporal attention mechanisms. The architectures are chosen to investigate the advantages of sequential modeling, non-linear feature interactions, and global attention mechanisms for the CVLE classification task.
 
-\subsection{Evaluation Metrics and Threshold Optimisation}
-Placeholder: AUC-ROC, macro-F1, Brier score, accuracy; classification threshold selected by F1-macro grid search over the validation set rather than fixed at 0.5.
+\subsubsection{1) Traditional Machine Learning Baselines}
+
+To set three classic statistical baselines and tree-based ones:
+
+\begin{itemize}
+
+\item \textbf{Logistic Regression (LR):} The L2 (Ridge) penalty was used as the simplest linear baseline to consider the linear separability of the feature space, with the maximum number of iterations allowed as 2000.
+
+\item \textbf{Random Forest (RF):} An ensemble of 300 decision trees that has a maximum tree depth of 6 and a minimum leaf size of 2. RF is strong in the high dimensional feature space with both static and dynamic features.
+
+\item \textbf{Gradient Boosting Decision Trees (GBDT):} We consider two versions of GBDT: XGBoost (XGB) and LightGBM (LGB). Both are set with 300 estimators, max depth set to 6, learning rate of 0.05 and subsampling and feature fraction of 0.8.
+
+\end{itemize}
+
+LR, RF and LGB are trained using class weights to address the extreme class imbalance in the training data, where positive cases make up only 7.6\% of the total. For the sake of addressing the extreme class imbalance in training data, LR, RF, and LGB are trained using class weights, with
+
+\[
+scale\_pos\_weight = 1.0
+\]
+
+in LR and RF, and
+
+\[
+scale\_pos\_weight =
+\frac{neg\_count}{pos\_count}
+\]
+
+in LGB.
+
+\subsubsection{2) Sequential Deep Learning Models}
+
+We then apply three deep learning architectures for sequence classification, with a lookback window of the last 5 years of the 17 time-varying features:
+
+\begin{itemize}
+
+\item \textbf{Long Short-Term Memory (LSTM):} Two LSTM layers with 64 hidden units and a dropout rate of 0.2 followed by a dense output layer using sigmoid activation.
+
+\item \textbf{Temporal Convolutional Network (TCN):} Causal 1D conv to replace the recurrence, preventing the leakage of future information. The TCN consists of 4 layers, 3 kernel size, 64 hidden channel size, residual connections, dropout rate of 0.2 and exponential dilation factor of 1, 2, 4, and 8.
+
+\item \textbf{Vanilla Transformer:} A sequence classifier composed of sinusoidal positional encodings, two layers of an encoder (model dimension = 64, number of attention heads = 4, feedforward expansion dimension = 256, dropout = 0.1).
+
+\end{itemize}
+
+The parameters of LSTM, TCN, and Transformer are optimized by the Adam optimizer with a learning rate of
+
+\[
+1 \times 10^{-3}
+\]
+
+and trained for 30 epochs (LSTM) and 20 epochs (TCN and Transformer) using the Binary Cross-Entropy loss function.
+
+\subsubsection{3) Primary Forecasting Model: Temporal Fusion Transformer (TFT)}
+
+Lastly, we use the Temporal Fusion Transformer (TFT) as our main forecasting model. TFT is cutting-edge design, state-of-the-art attention-based architecture for multi-horizon time-series forecasting. The TFT is different from the sequential classification models, which predict one single binary classification on a 5-year event horizon, while the TFT covers a 3-year horizon in the future, based on a 5-year lookback window.
+
+The TFT is organized to use a hidden size of 64, and four attention heads. An important benefit of the TFT is its use of Gated Residual Networks (GRNs) and Variable Selection Networks (VSNs) which allow the model to focus on and prioritize each of the static categorical variables city and crop, and static real variables FAO GAEZ crop suitability and EECOCROP biological thresholds separately from the 17 time varying variables.
+
+The continuous variables are normalized by using a GroupNormalizer grouped by city with a softplus transformation. In order to measure the confidence of the prediction, the TFT is trained using multi-output quantile regression (QuantileLoss) for seven target quantiles:
+
+\[
+0.1,\;0.25,\;0.5,\;0.75,\;0.9
+\]
+
+and two quantiles used for calibration.
+
+It has about 115,000 parameters, regularizes with a dropout rate of 0.1, is optimized via Adam (learning rate
+
+\[
+1 \times 10^{-3}
+\]
+
+), uses a batch size of 16 and early stops after 5 epochs.
+
+\subsection{4E. Train / Validation / Test Split}
+
+To tackle two main problems of climate and agricultural modeling - temporal dependency and class imbalance, the configuration of train, validation and test datasets is designed in this study. The master data set contains the data for 10 major cities in India for 25 years (2000 to 2024). The high temporal autocorrelation of climate time series makes the common random splitting and random k-fold cross-validation techniques very unsuitable. Random partitioning of the data would result in significant temporal leakage and lookahead bias in which a model learned from data from years $t-1$ and $t+1$ might have been able to predict the state of year $t$ without having to learn the causal dynamics. To test the models for their capacity to predict future climates that are not part of their training, we use a very strict chronological temporal split, without any shuffling of data.
+
+This temporal partition is then mapped to ``sliding sequence windows'' for sequential deep learning architectures. The length of the lookback sequence 5 years means the first predictions must start in the 6th year of the temporal split of the training period (2005) which helps avoid sequence lookbacks including information over temporal partition boundaries or future validation \& test data.
+
+\subsubsection{1) Dataset Partitioning}
+
+Partitions are chronological:
+
+\begin{itemize}
+
+\item \textbf{The year range for the training Set is 2000-2018,} with 16 positive CVLE cases. This split is applied for the baseline model, training the deep models and fine tuning model parameters.
+
+\item \textbf{Validation Set:} includes the years 2019-2021 (30 samples with 3 samples containing positive cases). With hyperparameter optimization and early stopping, a validation split is used, yielding a total of 220 samples (19 positives).
+
+\item \textbf{Test Set:} Contains 30 samples test cases covering the year 2022 to 2024 with exactly 1 positive CVLE case. This final split is not accessed during any of the training or hyperparameter tuning steps, and is only used in an unbiased model evaluation step.
+
+\end{itemize}
+
+\subsubsection{2) Class Imbalance and Evaluation Metrics}
+
+One of the main challenges of this dataset is that it is highly imbalanced. The number of city-year combinations with positive CVLE is 19 over a total of 250 city-years studied (a prevalence of 7.6\%) across the entire 25-year study. The unbalance is even harsher for the test set at a ratio of 1:29. The test split is the true chronological sequence of climate events, but this is a known limitation as only a single positive event occurs between 2022 and 2024, making AUC and precision metrics very sensitive to small changes in predictions. If the model would predict that there is no viability loss event, then it would be accurate on the test set with 96.67\%, but would not be able to detect any of the actual viability loss events. To overcome the class imbalance and avoid such models becoming overfitted to the majority class, we take three key actions:
+
+\begin{itemize}
+
+\item \textbf{Class Weighting During training:} Yes. We use the balanced class weight configuration for Logistic Regression, Random Forest and LightGBM, which will automatically apply class weights inversely to the class frequencies. In the case of XGBoost, we use the ratio of negative to positive training examples for the parameter
+
+\[
+scale\_pos\_weight
+\]
+
+that determines positive scaling.
+
+\item \textbf{Decision threshold optimization:} We do the decision threshold optimization. We opt for a grid search over the validation set instead of the usual threshold of 0.5, to get the best decision boundary in terms of the maximum macro-averaged F1 score. This helps to ensure that the positive class is evaluated equally.
+
+\item \textbf{Distribution-Insensitive Metrics:} We emphasize metrics which are not strongly affected by class distribution. We focus on Area under the Receiver Operating Characteristic (AUC-ROC), macro-averaged F1-scores and Brier scores. The Brier score is one indicator of model calibration that is the mean squared difference between the predicted probabilities and actual probabilities.
+
+\end{itemize}
+
+\subsection{4F. Threshold Optimisation and Evaluation Metrics}
+
+The models' predictive ability in this study needs to be assessed in a multi-faceted way, as a measure of just classification accuracy is insufficient. The data set, Crop Viability Loss Event (CVLE), is extremely imbalanced, with positive samples accounting for just 7.6\% of the master data set, and only one positive sample in the test set, making the standard accuracy a very deceptive measure. A naive classifier that classifies each and every test sample as ``no event'' would get an erroneously high accuracy rate of 96.67\% and at the same time be unable to detect the agricultural crisis. We use four important evaluation metrics: Area Under the Receiver Operating Characteristic curve (AUC-ROC), macro-averaged F1-score, Brier score and overall classification accuracy to provide a rigorous and balanced evaluation.
+
+\subsubsection{1) Relationship between Classification and Discrimination Metrics}
+
+\textbf{Macro-Averaged F1-Score (Macro-F1):} Our main optimization score. While micro-averaged F1 is the average of the F1 scores of the individual classes, it is weighted by the number of classes, macro-average F1 is computed separately for each class and then averaged together. This is the case for the positive class (event) and the negative class (non-event). This will make it a strong indicator of performance under severe class imbalance since it will heavily punish the model if it doesn't predict the rare positive class.
+
+\textbf{Area Under the ROC Curve (AUC-ROC):} Measures how well the model performs on all possible decision boundaries. It is based on the probability that a randomly selected positive class sample will have a higher risk score than a randomly selected negative class sample and thus provides an independent assessment of the quality of the classifiers, without relying on a threshold.
+
+\subsubsection{2) CVA Score and Signatures of Skill}
+
+AUC-ROC is a measure of discrimination, whereas climate adaptation decisions need well-calibrated probabilities of risk. For example, if a model projects a 70\% chance of the loss of crop viability, then in the historical scenarios, the loss of crop viability should occur around 70\% of the time. Brier score is used to assess the calibration of probability. The Brier score is given by the mean squared error of the predicted probabilities, which can be expressed mathematically as:
+
+\[
+\text{Brier}
+=
+\frac{1}{N}
+\sum_{i=1}^{N}
+(p_i - y_i)^2
+\]
+
+where $N$ is the number of all samples, $p_i$ is the predicted probability of a CVLE and $y_i$ is the ground truth binary label. Brier scores are between 0 and 1, with 0 being the best prediction and 1 being the worst prediction. This calibration check is particularly important to ensure that model predictions are reliable estimates of the actual physical probability of a policy's outcome and are applicable to policy planning.
+
+\subsubsection{3) Decision Threshold Grid Search}
+
+We optimize the decision threshold to map the continuous probability values to the binary classification labels, in order to fill the gap. The default decision threshold for a machine learning classifiers is 0.5. In a very imbalanced classification, however, this threshold is very sub-optimal and often causes deep neural networks and tree ensembles to predict all cases as the majority class, with a positive recall of 0.
+
+In order to avoid this collapse, we make an evaluation over the validation set for each of the 8 models. The thresholds used are the ones between 0.01 and 0.99 with a step size of 0.01. Macro Average F1 on validation set for each step. This grid search will ensure a balance between false positives and negatives that will reflect the high cost of missing a CVLE (false negative) and the cost of agricultural intervention being made unnecessarily (false positive).
+
+The value of the threshold which maximizes the validation macro-F1 is chosen as the optimal threshold of the model. The optimum threshold is then customized and used on the independent test set (2022--2024) to determine the final classification metrics that are reported. We optimize thresholds only using the validation split and test using the isolated test split to avoid data leakage and to get a fair and generalized view of the performance of the model.
 
 \subsection{Uncertainty Quantification}
 Placeholder: Monte Carlo dropout (50 forward passes) for LSTM, TCN, and Transformer; tree variance for Random Forest; Expected Calibration Error (ECE) computed with 10-bin histogram.
