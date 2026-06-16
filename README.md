@@ -76,7 +76,7 @@ Sections are divided by logical grouping with roughly equal writing load (~5–6
 | File | Purpose |
 |------|---------|
 | `access.tex` | Main LaTeX source |
-| `AGENT_PAPER.md` | Full technical spec — datasets, models, results, constants |
+| `AGENTS.md` | Full technical spec — datasets, models, results, constants |
 | `access.pdf` | Compiled output |
 
 ## Build

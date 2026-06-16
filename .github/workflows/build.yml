@@ -24,11 +24,11 @@ jobs:
     
     - name: Build PDF with latexmk
       run: |
-        latexmk -pdf -interaction=nonstopmode -file-line-error main.tex
-    
+        latexmk -pdf -interaction=nonstopmode -file-line-error access.tex
+
     - name: Rename PDF
       run: |
-        mv main.pdf conference-paper.pdf
+        mv access.pdf conference-paper.pdf
     
     - name: Upload produced PDF
       uses: actions/upload-artifact@v4
