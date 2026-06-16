@@ -61,8 +61,8 @@ env/
 # figures/.gitkeep
 # tables/.gitkeep
 
-# PDF Output (Optional - comment out if you want to commit PDFs)
-# main.pdf
+# PDF Output
+*.pdf
 
 # Backup Files from Editors
 *~
@@ -94,7 +94,6 @@ notes/
 drafts/
 *.draft.tex
 
-main.pdf
 Reference files/
 
 SETUP_COMPLETE.md
