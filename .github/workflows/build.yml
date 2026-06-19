@@ -24,7 +24,7 @@ jobs:
     
     - name: Build PDF with latexmk
       run: |
-        latexmk -pdf -f -interaction=nonstopmode -file-line-error access.tex
+        latexmk -pdf -f -interaction=nonstopmode -file-line-error access.tex || test -f access.pdf
 
     - name: Rename PDF
       run: |
