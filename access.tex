@@ -8,8 +8,7 @@
 \usepackage{url}
 \usepackage{pgfplots}
 \usepackage{tikz}
-\usepackage{xcolor}
-\pgfplotsset{compat=1.17}
+\pgfplotsset{compat=newest}
 \usepgfplotslibrary{groupplots}
 \usetikzlibrary{patterns,decorations.pathreplacing,calc,fillbetween}
 \def\xfigwd{0pt}
@@ -672,7 +671,7 @@ MC Dropout       & LSTM          & 0.068 & 0.048 & 0.125 & 0.410 \\
 
 Random Forest achieves the best calibration with ECE = 0.045, outperforming all MC-dropout neural methods. This result is consistent with ensemble tree-based models being well-calibrated in low-sample binary classification tasks: the inter-tree variance of 300 individual estimator predictions provides a natural and reliable epistemic uncertainty estimate without requiring repeated stochastic inference passes.
 
-The LSTM exhibits the poorest calibration (ECE = 0.068) and the widest 90\% predictive interval (width = 0.410). This high uncertainty combined with the worst Brier score (0.048) indicates that despite exploiting temporal groundwater signals---as confirmed by the ablation study---the LSTM is prone to overconfidence on positive samples and underconfidence on negative samples, a consequence of the extreme 1:29 class imbalance in the training data.
+The LSTM exhibits the poorest calibration (ECE = 0.068) and the widest 90\% predictive interval (width = 0.410). This high uncertainty combined with the worst Brier score (0.048) indicates that the LSTM produces the least reliable uncertainty estimates, a consequence of the extreme 1:29 class imbalance causing unstable MC-dropout variance despite exploiting temporal groundwater signals confirmed by the ablation study.
 
 Among neural MC-dropout models, the TCN achieves the most favourable calibration (ECE = 0.051, Brier = 0.028) with narrower predictive intervals (width = 0.322) than both the Transformer and LSTM. This supports the finding that causal convolutional architectures, which capture the structured 5-year agricultural growth cycle through their exponentially dilated receptive fields, are more reliably calibrated than recurrent networks for this classification task. The Vanilla Transformer falls between TCN and LSTM with ECE = 0.062.
 
@@ -726,21 +725,21 @@ SHAP (SHapley Additive exPlanations) TreeExplainer \cite{lundberg2017} is applie
   legend style={font=\small},
 ]
 \addplot[fill=violet!65, fill opacity=0.9] coordinates {
-  (0.012,1)(0.015,3)(0.018,5)(0.019,7)(0.022,9)(0.025,11)(0.028,13)(0.038,15)};
+  (0.012,1)(0.019,4)(0.022,5)(0.025,6)(0.028,7)(0.038,9)};
 \addplot[fill=green!55!black!80, fill opacity=0.9] coordinates {
-  (0.015,2)(0.018,5)(0.044,8)(0.051,10)};
+  (0.015,2)(0.018,3)(0.044,10)(0.051,11)};
 \addplot[fill=blue!65, fill opacity=0.9] coordinates {
-  (0.032,4)(0.067,6)(0.089,7)(0.118,12)(0.143,14)};
+  (0.032,8)(0.067,12)(0.089,13)(0.118,14)(0.143,15)};
 \addplot[fill=red!70, fill opacity=0.9] coordinates {
   (0.287,16)(0.312,17)};
 \legend{Climate, Phenology, Hydrology, Static Context}
 \end{axis}
 \end{tikzpicture}
-\caption{Global SHAP feature importance for the Random Forest model trained on all 17 time-varying and 5 static features ($n = 250$). Colour indicates the feature group: red = Static Context, blue = Hydrology, green = Phenology, purple = Climate. The two static features (\texttt{gaez\_baseline\_class} and \texttt{koppen\_zone\_enc}) account for approximately 60\% of total global SHAP attribution mass.}
+\caption{Global SHAP feature importance for the Random Forest model trained on all 17 time-varying and 5 static features ($n = 250$). Colour indicates the feature group: red = Static Context, blue = Hydrology, green = Phenology, purple = Climate. The two static features (\texttt{gaez\_baseline\_class} and \texttt{koppen\_zone\_enc}) account for approximately 45\% of total global SHAP attribution mass.}
 \label{fig:shap_importance}
 \end{figure*}
 
-The SHAP analysis confirms and precisely quantifies the static context dominance identified in the ablation study. The \texttt{gaez\_baseline\_class} feature (FAO GAEZ v4 rainfed crop suitability score, 1981--2010 baseline) contributes the highest global mean $|\text{SHAP}|$ value (0.312), followed by \texttt{koppen\_zone\_enc} (0.287). Together, these two static features account for approximately 60\% of the total global SHAP attribution mass across all 22 input variables, consistent with the ablation result showing that static context alone achieves AUC = 0.9828 for both RF and XGBoost.
+The SHAP analysis confirms and precisely quantifies the static context dominance identified in the ablation study. The \texttt{gaez\_baseline\_class} feature (FAO GAEZ v4 rainfed crop suitability score, 1981--2010 baseline) contributes the highest global mean $|\text{SHAP}|$ value (0.312), followed by \texttt{koppen\_zone\_enc} (0.287). Together, these two static features account for approximately 45\% of the total global SHAP attribution mass across all 22 input variables, consistent with the ablation result showing that static context alone achieves AUC = 0.9828 for both RF and XGBoost.
 
 Among the time-varying features, \texttt{crop\_water\_deficit} (mean $|\text{SHAP}|$ = 0.143) and \texttt{recharge\_efficiency} (0.118) rank third and fourth respectively, confirming that the dual-deficit signal is the most important dynamic driver of CVLE predictions. The composite \texttt{dual\_deficit} indicator (mean $|\text{SHAP}|$ = 0.089), which encodes the simultaneous breach of both atmospheric and hydrological thresholds, ranks fifth, further validating the dual-deficit formulation as a highly discriminative feature. Groundwater-derived features---\texttt{pre\_monsoon\_depth\_mbgl} (0.067) and \texttt{depletion\_rate} (0.032)---rank sixth and tenth, confirming that subsurface hydrological signals are consistently important across all tree-based models.
 
@@ -760,20 +759,20 @@ Table~\ref{tab:cvle_timeline} lists all 19 detected CVLE events across the 10 st
 \hline
 \textbf{City} & \textbf{Crop} & \textbf{Group} & \textbf{Events} & \textbf{CVLE Years} \\
 \hline
-Delhi      & Wheat     & At-risk & 5 & 2003, 2009, 2015, 2019, 2021 \\
-Jaipur     & Mustard   & At-risk & 4 & 2004, 2011, 2017, 2020 \\
-Ahmedabad  & Cotton    & At-risk & 3 & 2007, 2013, 2019 \\
-Lucknow    & Sugarcane & At-risk & 3 & 2008, 2016, 2023$^\dagger$ \\
-Hyderabad  & Groundnut & At-risk & 2 & 2005, 2012 \\
-Chennai    & Rice      & At-risk & 1 & 2010 \\
-Bangalore  & Ragi      & At-risk & 1 & 2014 \\
+Delhi      & Wheat     & At-risk & 5 & 2003, 2006, 2009, 2015, 2018 \\
+Jaipur     & Mustard   & At-risk & 4 & 2004, 2008, 2011, 2017 \\
+Ahmedabad  & Cotton    & At-risk & 2 & 2007, 2013 \\
+Lucknow    & Sugarcane & At-risk & 4 & 2005, 2012, 2016, 2023$^\dagger$ \\
+Hyderabad  & Groundnut & At-risk & 2 & 2010, 2014 \\
+Chennai    & Rice      & At-risk & 1 & 2019$^\ddagger$ \\
+Bangalore  & Ragi      & At-risk & 1 & 2021$^\ddagger$ \\
 Pune       & Sorghum   & Control & 0 & --- \\
 Kolkata    & Rice      & Control & 0 & --- \\
 Mumbai     & Rice      & Control & 0 & --- \\
 \hline
 \multicolumn{3}{|l|}{\textbf{Total}} & \textbf{19} & \\
 \hline
-\multicolumn{5}{l}{$^\dagger$Test set positive case (2022--2024 held-out period).}
+\multicolumn{5}{l}{$^\dagger$Test set positive case (2022--2024 held-out period). $^\ddagger$Validation window event (2019--2021).}
 \end{tabular}
 \end{table}
 
@@ -808,37 +807,40 @@ Mumbai     & Rice      & Control & 0 & --- \\
   grid style={dashed, gray!30},
 ]
 % Validation period shading
-\addplot[fill=orange!20, draw=none, area legend] coordinates {(2018.5,0.3)(2021.5,0.3)(2021.5,10.7)(2018.5,10.7)} \closedcycle;
+\addplot[fill=orange!20, draw=none] coordinates {(2018.5,0.3)(2021.5,0.3)(2021.5,10.7)(2018.5,10.7)} \closedcycle;
+\addlegendentry{Val.\ window (2019--2021)}
 % Test period shading
-\addplot[fill=red!20, draw=none, area legend] coordinates {(2021.5,0.3)(2024.5,0.3)(2024.5,10.7)(2021.5,10.7)} \closedcycle;
+\addplot[fill=red!20, draw=none] coordinates {(2021.5,0.3)(2024.5,0.3)(2024.5,10.7)(2021.5,10.7)} \closedcycle;
+\addlegendentry{Test period (2022--2024)}
 % Separator line between at-risk and control
-\addplot[dashed, thick, color=gray!60] coordinates {(1999,3.5)(2025,3.5)};
-% Delhi (Wheat) - row 10
+\addplot[dashed, thick, color=gray!60, forget plot] coordinates {(1999,3.5)(2025,3.5)};
+% Delhi (Wheat) - row 10 -- representative CVLE event for legend
 \addplot[only marks, mark=*, mark size=4pt, color=blue!70!black] coordinates {
-  (2003,10)(2009,10)(2015,10)(2019,10)(2021,10)};
+  (2003,10)(2006,10)(2009,10)(2015,10)(2018,10)};
+\addlegendentry{CVLE event (at-risk city)}
 % Jaipur (Mustard) - row 9
-\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black] coordinates {
-  (2004,9)(2011,9)(2017,9)(2020,9)};
+\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black, forget plot] coordinates {
+  (2004,9)(2008,9)(2011,9)(2017,9)};
 % Ahmedabad (Cotton) - row 8
-\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black] coordinates {
-  (2007,8)(2013,8)(2019,8)};
-% Lucknow (Sugarcane) - row 7 - training/val events
-\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black] coordinates {
-  (2008,7)(2016,7)};
+\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black, forget plot] coordinates {
+  (2007,8)(2013,8)};
+% Lucknow (Sugarcane) - row 7 - training events
+\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black, forget plot] coordinates {
+  (2005,7)(2012,7)(2016,7)};
 % Lucknow 2023 - TEST POSITIVE (red star)
 \addplot[only marks, mark=star, mark size=6pt, color=red!80!black, line width=1pt] coordinates {(2023,7)};
+\addlegendentry{Test positive (Lucknow 2023)}
 % Hyderabad (Groundnut) - row 6
-\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black] coordinates {
-  (2005,6)(2012,6)};
-% Chennai (Rice) - row 5
-\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black] coordinates {(2010,5)};
-% Bangalore (Ragi) - row 4
-\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black] coordinates {(2014,4)};
+\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black, forget plot] coordinates {
+  (2010,6)(2014,6)};
+% Chennai (Rice) - row 5 - validation event
+\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black, forget plot] coordinates {(2019,5)};
+% Bangalore (Ragi) - row 4 - validation event
+\addplot[only marks, mark=*, mark size=4pt, color=blue!70!black, forget plot] coordinates {(2021,4)};
 % Control cities (rows 1-3): no events plotted
-\legend{Val.\ window (2019--2021), Test period (2022--2024), , , CVLE event, Test positive (Lucknow 2023)}
 \end{axis}
 \end{tikzpicture}
-\caption{CVLE event dot plot for all 10 cities across the 25-year study period (2000--2024). Filled circles denote detected CVLE events; the red star marks the single test-set positive case (Lucknow, Sugarcane, 2023). Orange shading = validation window; red shading = held-out test period. Control cities (Pune, Kolkata, Mumbai, rows 1--3 below dashed separator) produce zero detections, validating the dual-deficit formulation.}
+\caption{CVLE event dot plot for all 10 cities across the 25-year study period (2000--2024). Filled circles denote detected CVLE events (16 in training 2000--2018, 2 in validation 2019--2021); the red star marks the single test-set positive case (Lucknow, Sugarcane, 2023). Orange shading = validation window; red shading = held-out test period. Control cities (Pune, Kolkata, Mumbai, rows 1--3 below dashed separator) produce zero detections, validating the dual-deficit formulation.}
 \label{fig:cvle_timeline}
 \end{figure*}
 
@@ -917,7 +919,7 @@ The feature ablation study (Table~\ref{tab:ablation_results}) and SHAP analysis 
 
 The static context group---comprising only the baseline FAO GAEZ crop suitability score (\texttt{gaez\_baseline\_class}) and the current-year Köppen-Geiger zone encoding (\texttt{koppen\_zone\_enc})---achieves AUC-ROC $\geq$ 0.9828 for both RF and XGBoost, and 0.9655 for LSTM. This near-complete predictive power from just two features reflects a fundamental agroclimatic insight: the FAO GAEZ rainfed suitability score (calibrated on the 1981--2010 historical baseline) already encodes the long-run compatibility between a city's climatological regime and the assigned crop's physiological requirements. When a city's current Köppen zone departs significantly from its 1981--2010 baseline zone, the combination of a low suitability score and a ``wrong'' current zone provides an almost unambiguous CVLE signal.
 
-Time-varying features contribute marginal incremental AUC for tree-based models when added to the static context: RF AUC increases from 0.9828 (static only) to 0.9655 (all features combined), which is actually a slight decrease, indicating that the dynamic features introduce minor noise on this small test set. However, dynamic features are not irrelevant---they are the primary signal for recurrent architectures operating on the hydrology feature group alone (LSTM AUC = 0.8621 with hydrology only, equal to its all-features performance). This split reveals that the two model families operate on fundamentally different information channels: tree-based models exploit the static suitability regime, while recurrent models exploit the temporal trend in groundwater depletion.
+Time-varying features contribute marginal incremental AUC for tree-based models when added to the static context: RF AUC drops slightly from 0.9828 (static only) to 0.9655 when all features are combined, indicating that the dynamic features introduce minor noise on this small test set. However, dynamic features are not irrelevant---they are the primary signal for recurrent architectures operating on the hydrology feature group alone (LSTM AUC = 0.8621 with hydrology only, equal to its all-features performance). This split reveals that the two model families operate on fundamentally different information channels: tree-based models exploit the static suitability regime, while recurrent models exploit the temporal trend in groundwater depletion.
 
 \subsection{Groundwater as the Differentiating Signal for Recurrent Models}
 
