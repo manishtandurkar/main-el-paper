@@ -97,16 +97,60 @@ The most architecturally advanced of these models is the Temporal Fusion Transfo
 % -----------------------------------------------------------------------
 
 \subsection{Study Cities and Crop Assignments}
-Placeholder: Description of the 10 Indian cities (Delhi, Mumbai, Kolkata, Chennai, Bangalore, Hyderabad, Ahmedabad, Jaipur, Lucknow, Pune), their assigned crops, and the at-risk vs.\ control city grouping.
+The 10 major cities studied are selected to represent a range of climatic conditions and agricultural value and are for those cities that had data available: Delhi, Mumbai, Kolkata, Chennai, Bangalore, Hyderabad, Ahmedabad, Jaipur, Lucknow, and Pune. The city specific crops selected are representative rainfed crops regional specific for the city and historically suitable based on FAO GAEZ and ECOCROP literature (e.g., wheat crop for Delhi, rice for Chennai and Mumbai, groundnut for Hyderabad, sorghum for Pune). The cities were randomly assigned to two experimental groups, one comprised of city--crop pairs that were deemed to be at risk and the other comprised of city--crop pairs that were deemed to be control groups based on historical climate trends or groundwater depletion.Historical climate trends or groundwater depletion were used to select the at-risk city--crop pairs and the control city--crop pairs (Table~\ref{tab:cities} shows the complete assignments). The selection criteria were centered on geographic spread to ensure that the data covered the four regions within India – north, south, east and west – as well as the diversity of crops – cereals, oilseeds, legumes – and the availability of nearby CGWB observation wells to enable the attainment of a high level of hydrological aggregation.
+
+% --- City assignments table (populate coordinates, well counts, at-risk flag) ---
+\begin{table}[htbp]
+\caption{Study cities, assigned crops, and metadata.}
+\label{tab:cities}
+\centering
+\begin{tabular}{l l l l r}
+\hline
+City & Latitude, Longitude & Assigned crop & Group & Wells (50 km) \\
+\hline
+Delhi      & 28.6139\textdegree N, 77.2090\textdegree E & Wheat     & At-risk         & 12 \\
+Mumbai     & 19.0760\textdegree N, 72.8777\textdegree E & Rice      & Control         & 14 \\
+Kolkata    & 22.5726\textdegree N, 88.3639\textdegree E & Rice      & Control         & 3  \\
+Chennai    & 13.0827\textdegree N, 80.2707\textdegree E & Rice      & At-risk         & 5  \\
+Bangalore  & 12.9716\textdegree N, 77.5946\textdegree E & Ragi      & Control         & 7  \\
+Hyderabad  & 17.3850\textdegree N, 78.4867\textdegree E & Groundnut & At-risk         & 9  \\
+Ahmedabad  & 23.0225\textdegree N, 72.5714\textdegree E & Cotton    & At-risk         & 3  \\
+Jaipur     & 26.9124\textdegree N, 75.7873\textdegree E & Mustard   & At-risk (proxy) & 0$^{\dagger}$ \\
+Lucknow    & 26.8467\textdegree N, 80.9462\textdegree E & Sugarcane & At-risk         & 18 \\
+Pune       & 18.5204\textdegree N, 73.8567\textdegree E & Sorghum   & Control         & 10 \\
+\hline
+\multicolumn{5}{l}{$^{\dagger}$No wells within 50~km; nearest-well proxy used (\texttt{gw\_imputed}=2).}
+\end{tabular}
+\end{table}
 
 \subsection{Dataset 1: Daily Atmospheric Climate}
-Placeholder: Open-Meteo / Kaggle Historical Weather Dataset covering 10 cities × 25 years of daily temperature, precipitation, and wind; humidity derived via Steadman apparent-temperature inversion.
+Data on the climate of the atmosphere was extracted each day from the Kaggle historical weather catalogue compiled from Open-Meteo data, and ranged from 2000 to 2024 for all 10 cities. The raw daily fields contain maximum and minimum 2m air temperature, daily precipitation and maximum wind speed. It standardises column names, calculates daily mean temperature as an average of daily maximum and minimum temperature and changes wind speed to metres per second as necessary. Daily data are used to calculate annual and seasonal aggregates for the purpose of creating the climate feature set that is used by the models (annual mean temperature, annual rainfall, number of dry months, monsoon onset day-of-year, and seasonal GDD accumulation).
+
+Relative humidity is not measured in the raw data, but appears per-day based on a Steadman apparent-temperature inversion adapted for the variables measured. The procedure uses apparent-temperature diagnostics, wind, and daily mean temperature to calculate an empirical vapour-pressure proxy e, and then calculates the saturation vapour pressure, es, from the daily mean temperature and then clips the calculated relative humidity, RH, to a physically plausible range. Daily RH values are then averaged to seasonal and annual means for further feature engineering downstream. All time series are quality-controlled, missing days are linearly interpolated, multi-day gaps are flagged and noted in a QC column, and extreme outliers are Winsorised at 0.5 and 99.5 percentile to minimise the impact of sensor and reanalysis artefacts.
 
 \subsection{Dataset 2: CGWB Groundwater Levels}
-Placeholder: Central Groundwater Board seasonal well readings (2000–2022) for 2,759 wells aggregated within 50 km city radii; imputation strategy for Jaipur (nearest-well proxy) and post-2022 gap.
+Groundwater observations were collected from the Central Groundwater Board (CGWB) monitoring network over the various seasons. The CGWB inventory was processed to a 50-km radius around each city centroid, and includes 2,759 observation wells with seasonal readings (typically January, May, August and November) from 2000 to 2022. To calculate the depletion rate, we create robust well-leveled aggregates like the median pre-monsoon depth (May), post-monsoon depth (August) and year-on-year January depth change for each city-year.
+
+The CGWB record ends in 2022, for 2023–2024, we have used conservative imputation, based on the mean trend of a small city-group of cities with similar hydroclimatic regime, and marked these records with an imputation indicator. If there are no wells found within 50 km radius of the source then nearest-well proxy is used, which is from the closest monitored site(s) and a proxy flag is added in this case. In downstream analyses and sensitivity testing, the various imputation and proxy options are documented in the dataset with the flag `gw_imputed`.
 
 \subsection{Dataset 3: FAO GAEZ v4 Crop Suitability}
-Placeholder: GeoTIFF rasters at 9 km resolution providing rainfed baseline suitability scores (1–7) for each city-crop pair, extracted at city centroids.
+The baseline suitability of rain fed crops is based on the Food and Agriculture Organization's Global Agro-Ecological Zones (GAEZ) version 4. Suitability values are computed for each city centroid by nearest-neighbour sampling on the 9~km grid of the rainfed GeoTIFF layers from the GAEZ. As we treat the extracted score as a static characteristic of the agroecological context of the city for the crop in question, we call it the `gaez_baseline_class`. Crop thresholds (day of crop year, minimum GDD, water requirement) and crop calendars are compiled from ECOCROP and FAO crop parameter tables, and are appended to every city--crop record.
+
+% --- Dataset summary table (verify file names, row counts, spatial resolution) ---
+\begin{table}[htbp]
+\caption{Datasets used in VegShift and key properties.}
+\label{tab:datasets}
+\centering
+\begin{tabular}{l l l l}
+\hline
+Dataset & Source & Period & Notes / key preprocessing \\
+\hline
+Atmospheric daily weather & Open-Meteo / Kaggle & 2000--2024 & $\sim$91,321 rows; daily temp, precip, wind; RH derived via Steadman inversion \\
+CGWB groundwater wells    & CGWB inventory      & 2000--2022 & 2,759 wells; seasonal readings (Jan/May/Aug/Nov); 50~km aggregation; imputation flagged \\
+GAEZ v4 suitability       & FAO GAEZ v4         & baseline 1981--2010 & 9~km raster; nearest-neighbour extraction at city centroids; suitability classes 1--7 \\
+\hline
+\end{tabular}
+\end{table}
 
 % -----------------------------------------------------------------------
 \section{Methodology}
@@ -114,7 +158,7 @@ Placeholder: GeoTIFF rasters at 9 km resolution providing rainfed baseline suita
 % -----------------------------------------------------------------------
 
 \subsection{Köppen-Geiger Classification and Transition Detection}
-Placeholder: Rule-based classification per Peel et al.\ (2007) applied annually; persistence filter requiring 3+ consecutive years before a transition is recorded.
+Annual Climate fields are aggregated and K"{o}ppen-Geiger (KG) zones are calculated for each city following the rule thresholds of Peel et~al. (2007). Instead of the regular mapping of a year, the annual KG is determined by the full temperature and precipitation signals of the year and the appropriate subclass of the KG (e.g. BSh, BWh, Aw, Am, Cwa) is assigned to the year. A transient filter – a zone change is only recognized if the new zone lasts for three or more consecutive years – is needed to prevent noise (single years) from causing false zone transitions. Transitions identified are marked on a timeline and participate in causal linkage analyses that look at risk before and after the transition. All computed zones and events of the transition are stored in the processed data directory for re-producibility.
 
 \subsection{4B. Annual Feature Engineering}
 
@@ -295,6 +339,27 @@ A CVLE is formally declared when the consecutive dual-deficit condition is met, 
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
+
+% --- Crop parameter table (fill gdd_min, water_req, sow_doy per crop) ---
+\begin{table}[htbp]
+\caption{Crop-specific parameters used in CVLE construction (ECOCROP/FAO values as implemented in VegShift pipeline).}
+\label{tab:cropparams}
+\centering
+\begin{tabular}{l r r r}
+\hline
+Crop & $\mathit{gdd}_{\min}$ (\textdegree C-days) & Water requirement (mm) & Optimal sow DOY \\
+\hline
+Wheat     & 1200 & 450  & 120 \\
+Rice      & 2000 & 1200 & 152 \\
+Groundnut & 1600 & 500  & 152 \\
+Cotton    & 1800 & 700  & 152 \\
+Mustard   & 800  & 300  & 120 \\
+Ragi      & 1400 & 350  & 152 \\
+Sorghum   & 1400 & 400  & 152 \\
+Sugarcane & 2500 & 1500 & 90  \\
+\hline
+\end{tabular}
+\end{table}
 
 \subsection{4D. Model Architectures}
 
