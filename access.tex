@@ -28,20 +28,22 @@
 \uppercase{Manish H Parashar}\authorrefmark{2},
 \uppercase{Manish Tandurkar}\authorrefmark{3},
 \uppercase{Aditya Tripathi}\authorrefmark{4},
-and \uppercase{Vinay Sinnur}\authorrefmark{5}}
+\uppercase{Vinay Sinnur}\authorrefmark{5},
+\uppercase{Vinod A R}\authorrefmark{6},
+and \uppercase{Jyoti Shetty}\authorrefmark{7}}
 \address[1]{Department of Computer Science and Engineering, RV College of Engineering, Bengaluru, India (e-mail: nikhilnb.cs23@rvce.edu.in)}
 \address[2]{Department of Computer Science and Engineering, RV College of Engineering, Bengaluru, India (e-mail: manishhparashar.cs23@rvce.edu.in)}
 \address[3]{Department of Computer Science and Engineering, RV College of Engineering, Bengaluru, India (e-mail: manishtandurkar.cs23@rvce.edu.in)}
 \address[4]{Department of Artificial Intelligence, RV College of Engineering, Bengaluru, India (e-mail: adityatripathi.ai23@rvce.edu.in)}
 \address[5]{Department of Information Science and Engineering, RV College of Engineering, Bengaluru, India (e-mail: vinaysinnur.is23@rvce.edu.in)}
+\address[6]{Department of Civil Engineering, RV College of Engineering, Bengaluru, India (e-mail: vinodar@rvce.edu.in)}
+\address[7]{Department of Computer Science and Engineering, RV College of Engineering, Bengaluru, India (e-mail: jyothis@rvce.edu.in)}
 
 \tfootnote{This work was carried out as part of an academic research project at RV College of Engineering, Bengaluru, India.}
 
 \markboth
 {Bharadwaj \headeretal: VegShift: Detecting Crop Viability Loss Events}
 {Bharadwaj \headeretal: VegShift: Detecting Crop Viability Loss Events}
-
-\corresp{Corresponding author: Manish Tandurkar (e-mail: manishtandurkar.cs23@rvce.edu.in).}
 
 \begin{abstract}
 Climate change is causing a shift of agroclimatic zones toward hotter and drier conditions, and is threatening more than 600 million livelihoods in India that depend on agriculture. Current crop failure studies are based on static agroclimatic classifications or univariate stress indices, neither of which include consideration of the capacity of groundwater irrigation to mitigate stresses nor clearly mark the point at which failure results in permanent loss of viability. We introduce VegShift, a multi-source geospatial framework for identifying the Crop Viability Loss Event (CVLE): A formally dated year that is defined by a city-crop pair experiencing atmospheric rainfall failure, hydrological recharge collapse, and at least two of three acute phenological stress conditions. We generate a 250-sample master dataset of atmospheric, groundwater and rainfed crop suitability data across 25 years (2000-2024) over a collection of 19 (7.6\%) confirmed CVLE events in 10 major cities across India using daily atmospheric data from Open-Meteo, seasonal groundwater data from the Central Groundwater Board of India (CGBI) in 2,759 observation wells, and FAO Global Agro-Ecological Zones v4 (GAEZ v4) rainfed crop suitability rasters. Eight models (Logistic Regression, Random Forest, XGBoost, LightGBM, LSTM, TCN, Vanilla Transformer, and the Temporal Fusion Transformer) are tested and evaluated in a strict chronological train-test split. Logistic Regression achieves AUC-ROC=1.00 and Random Forest AUC-ROC=0.97, compared to all of the Deep Sequential Architectures, the TFT gives an AUC-ROC of 0.07. When analyzing the predictive signal, the feature group ablation shows that more than 98\% comes from the static context (FAO suitability class and K\"{o}ppen-Geiger zone encoding). The results of city analysis using the Control method indicate very low false detection rates for climatically stable cities, which confirms the validity of the dual-deficit CVLE formulation as a reliable event timestamping system.
@@ -1084,28 +1086,6 @@ D. Rolnick \textit{et al.}, ``Tackling climate change with machine learning,'' \
 S.~M. Lundberg and S.-I. Lee, ``A unified approach to interpreting model predictions,'' in \textit{Advances in Neural Information Processing Systems}, vol.~30, Curran Associates, Inc., 2017, pp.~4765--4774.
 
 \end{thebibliography}
-
-% -----------------------------------------------------------------------
-\newcounter{biography}
-\begin{IEEEbiography}[]{Author One}
-Biography placeholder.
-\end{IEEEbiography}
-
-\begin{IEEEbiography}[]{Author Two}
-Biography placeholder.
-\end{IEEEbiography}
-
-\begin{IEEEbiography}[]{Author Three}
-Biography placeholder.
-\end{IEEEbiography}
-
-\begin{IEEEbiography}[]{Author Four}
-Biography placeholder.
-\end{IEEEbiography}
-
-\begin{IEEEbiography}[]{Author Five}
-Biography placeholder.
-\end{IEEEbiography}
 
 \EOD
 
